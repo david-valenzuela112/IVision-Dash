@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 <meta name="theme-color" content="#123047">
 <title>IVision | Infusion Monitoring Dashboard</title>
 <style>
@@ -28,7 +28,7 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);
   font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  font-size:14px;line-height:1.45}
+  font-size:14px;line-height:1.45; -webkit-tap-highlight-color:transparent;}
 button,input,select{font:inherit}
 button{cursor:pointer}
 button:focus-visible,input:focus-visible,select:focus-visible{
@@ -164,13 +164,13 @@ input::placeholder{color:#8493a2}
 .notice{background:#fff8e9;border:1px solid #f1dfb8;color:#76551b;
   padding:11px 13px;border-radius:9px;font-size:11px;line-height:1.6;margin-top:14px}
 .notice strong{font-weight:850}
-.table-wrap{overflow-x:auto}
+.table-wrap{overflow-x:auto; -webkit-overflow-scrolling: touch;}
 table{width:100%;border-collapse:collapse;white-space:nowrap}
 th{text-align:left;color:var(--muted);background:#f7f9fb;font-size:10px;
   padding:13px 15px;letter-spacing:.4px}
 td{padding:13px 15px;border-top:1px solid var(--border);font-size:12px;vertical-align:top}
 tbody tr:hover{background:#f8faff}
-.table-room{border:0;background:none;color:var(--blue);font-weight:850;padding:0}
+.table-room{border:0;background:none;color:var(--blue);font-weight:850;padding:0; min-height:30px}
 .alert-list{display:grid;gap:10px}
 .alert-card{display:flex;align-items:flex-start;gap:12px;padding:15px;
   border:1px solid var(--border);border-radius:11px}
@@ -196,7 +196,7 @@ tbody tr:hover{background:#f8faff}
 .setting-desc{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5}
 .setting-control{display:flex;align-items:center;gap:7px;white-space:nowrap}
 .setting-control input[type=number]{width:90px}
-.setting-control input[type=checkbox]{width:19px;height:19px;accent-color:var(--blue)}
+.setting-control input[type=checkbox]{width:22px;height:22px;accent-color:var(--blue)}
 .footer{text-align:center;color:#82909d;font-size:10px;padding:25px 0 0}
 .toast{position:fixed;right:20px;bottom:20px;z-index:10;max-width:min(400px,calc(100vw - 40px));
   background:var(--navy);color:#fff;padding:13px 17px;border-radius:10px;
@@ -205,6 +205,8 @@ tbody tr:hover{background:#f8faff}
 .toast.show{opacity:1;transform:translateY(0)}
 .mobile-nav{display:none}
 @keyframes appear{from{opacity:.6;transform:translateY(3px)}to{opacity:1;transform:none}}
+
+/* Responsiveness starts here */
 @media(max-width:1200px){
   .layout{grid-template-columns:1fr}
   .floor{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -222,39 +224,54 @@ tbody tr:hover{background:#f8faff}
   .topbar{padding:13px 18px}
 }
 @media(max-width:600px){
-  .app{display:block;padding-bottom:66px}
+  .app{display:block;padding-bottom:80px}
   .sidebar{display:none}
   .topbar{padding:12px 15px}
   .content{padding:19px 12px}
-  .page-heading{flex-direction:column}
+  .page-heading{flex-direction:column; gap:12px}
   h1{font-size:24px}
+  
+  .btn{min-height:38px} /* Taller buttons for fat fingers */
   .metrics{gap:8px}
   .metric{padding:13px}
   .metric-value{font-size:26px}
   .metric-foot{font-size:10px}
-  .floor{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-  .room{padding:11px 9px}
-  .panel-body{padding:12px}
+  
+  /* Mobile optimized 1-column layout for rooms (preserves multi-fluid list readability) */
+  .floor{grid-template-columns:1fr; gap:12px}
+  .room{padding:14px 12px}
+  
+  .panel-body{padding:14px}
   .panel-head{padding:14px}
-  .search{width:100%;flex:1}
-  .toolbar>*{flex:1;min-width:100px}
+  
+  /* Stack toolbars gracefully */
+  .toolbar{flex-direction:column; align-items:stretch; gap:8px}
+  .search{width:100%; max-width:100%}
+  .toolbar select{width:100%}
+  
   .device-grid{grid-template-columns:1fr}
   .alert-card{flex-wrap:wrap}
-  .alert-content{flex-basis:calc(100% - 50px)}
-  .alert-actions{margin-left:46px}
+  .alert-content{flex-basis:calc(100% - 55px)}
+  .alert-actions{margin-left:46px; width:100%; margin-top:4px}
+  
   .detail-value{font-size:32px}
   .top-right{gap:7px}
   .clock{font-size:10px}
   .demo-pill{font-size:9px;padding:6px}
-  .mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:8;
+  
+  /* Mobile Bottom Nav Bar */
+  .mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:99;
     background:#fff;border-top:1px solid var(--border);justify-content:space-around;
-    padding:6px 3px calc(6px + env(safe-area-inset-bottom))}
+    padding:8px 4px calc(8px + env(safe-area-inset-bottom)); box-shadow:0 -4px 12px rgba(0,0,0,0.03)}
   .mobile-nav button{border:0;background:none;color:var(--muted);font-size:10px;
-    display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px}
-  .mobile-nav button span{font-size:19px}
+    display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px; flex:1}
+  .mobile-nav button span{font-size:20px; line-height:1}
   .mobile-nav button.active{color:var(--blue);font-weight:850}
-  .setting-row{align-items:flex-start;gap:12px}
-  .setting-control{padding-top:2px}
+  
+  /* Settings form stacking */
+  .setting-row{flex-direction:column; align-items:flex-start; gap:10px}
+  .setting-control{width:100%}
+  .setting-control input[type=number], .setting-control select{width:100%; max-width:none}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;
@@ -380,10 +397,10 @@ tbody tr:hover{background:#f8faff}
           <div class="panel-body settings-form">
             <div class="setting-row"><div><div class="setting-title">Critical volume threshold</div>
               <div class="setting-desc">At or below this volume (mL), a fluid level is marked critical.</div></div>
-              <div class="setting-control"><input type="number" id="criticalThreshold" min="1" max="500" value="50" aria-label="Critical threshold">mL</div></div>
+              <div class="setting-control"><input type="number" id="criticalThreshold" min="1" max="500" value="50" aria-label="Critical threshold"></div></div>
             <div class="setting-row"><div><div class="setting-title">Attention volume threshold</div>
               <div class="setting-desc">At or below this volume (mL), a fluid level needs attention.</div></div>
-              <div class="setting-control"><input type="number" id="attentionThreshold" min="10" max="1000" value="100" aria-label="Attention threshold">mL</div></div>
+              <div class="setting-control"><input type="number" id="attentionThreshold" min="10" max="1000" value="100" aria-label="Attention threshold"></div></div>
             <div class="setting-row"><div><div class="setting-title">Automatic demo updates</div>
               <div class="setting-desc">Randomly decrease some sample fluid levels over time.</div></div>
               <div class="setting-control"><input type="checkbox" id="autoUpdate" checked aria-label="Automatic demo updates"></div></div>
@@ -604,6 +621,13 @@ window.selectRoom = function(id){
   selectedId = id;
   renderFloor();
   renderDetails();
+  
+  // Mobile optimization: Auto-scroll to the details panel when a room is selected
+  if(window.innerWidth <= 1200) {
+    setTimeout(() => {
+      $("detailPanel").scrollIntoView({behavior: "smooth", block: "start"});
+    }, 50);
+  }
 };
 
 window.handleAdjust = function(rId, fId){
