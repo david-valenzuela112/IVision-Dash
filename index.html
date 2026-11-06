@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -114,7 +113,8 @@ input::placeholder{color:#8493a2}
 .floor{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .room{position:relative;text-align:left;border:1px solid var(--border);
   border-left:4px solid var(--status);border-radius:11px;padding:13px;
-  min-width:0;background:#fff;color:var(--text);transition:border-color .15s,background .15s}
+  min-width:0;background:#fff;color:var(--text);transition:border-color .15s,background .15s;
+  display:flex;flex-direction:column;gap:8px}
 .room:hover{background:#f8faff;border-color:#afc5dc}
 .room.selected{outline:2px solid var(--blue);outline-offset:-2px;background:#f1f6ff}
 .room:focus-visible{outline:3px solid #8bb4ff;outline-offset:1px}
@@ -126,31 +126,35 @@ input::placeholder{color:#8493a2}
 .status-tag.attention{color:var(--amber);background:var(--amber-bg)}
 .status-tag.critical{color:var(--red);background:var(--red-bg)}
 .status-tag.neutral{color:#526477;background:#edf1f5}
-.room-percent{font-size:27px;line-height:1.2;font-weight:850;
-  letter-spacing:-.7px;margin-top:15px;font-variant-numeric:tabular-nums}
-.room-percent small{font-size:11px;letter-spacing:0;color:var(--muted);font-weight:600}
-.progress{height:6px;background:#e9eef3;border-radius:10px;margin:9px 0;overflow:hidden}
-.progress-fill{height:100%;border-radius:10px;background:var(--status)}
-.room-bottom{display:flex;justify-content:space-between;gap:5px;color:var(--muted);font-size:10px}
+
+/* Fluids mini-bars inside room card */
+.fluids-list{display:flex;flex-direction:column;gap:12px;margin-top:6px;width:100%}
+.fluid-item{display:flex;flex-direction:column;gap:4px}
+.fluid-item-head{display:flex;justify-content:space-between;align-items:baseline}
+.fluid-item-name{font-size:11px;font-weight:750;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%}
+.fluid-item-val{font-size:14px;font-weight:850;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.fluid-item-time{font-size:9px;color:var(--muted);text-align:right}
+.progress{height:6px;background:#e9eef3;border-radius:10px;margin:2px 0;overflow:hidden}
+.progress-fill{height:100%;border-radius:10px;background:var(--status);transition:width 0.3s ease}
+
+.room-bottom{display:flex;justify-content:space-between;gap:5px;color:var(--muted);font-size:10px;border-top:1px solid var(--border);padding-top:8px}
 .empty-state{padding:30px 12px;text-align:center;color:var(--muted);grid-column:1/-1}
-.detail-hero{background:linear-gradient(130deg,#123047,#20566b);color:#fff;
-  padding:20px;border-radius:12px;margin-bottom:13px}
+.detail-hero{color:#fff;padding:20px;border-radius:12px;margin-bottom:13px;transition:background 0.3s}
 .detail-hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.detail-room{font-size:22px;font-weight:850}
-.detail-type{font-size:11px;color:#c5d9e4;margin-top:3px}
-.detail-value{font-size:43px;font-weight:850;letter-spacing:-2px;margin:18px 0 7px}
-.detail-value span{font-size:13px;letter-spacing:0;font-weight:600}
+.detail-room{font-size:18px;font-weight:850}
+.detail-type{font-size:11px;color:rgba(255,255,255,0.7);margin-top:3px}
+.detail-value{font-size:38px;font-weight:850;letter-spacing:-1px;margin:16px 0 6px;font-variant-numeric:tabular-nums}
+.detail-value span{font-size:13px;letter-spacing:0;font-weight:600;margin-left:6px}
 .detail-bar{height:8px;background:#ffffff30;border-radius:9px;overflow:hidden}
-.detail-bar div{height:100%;border-radius:9px}
+.detail-bar div{height:100%;border-radius:9px;transition:width 0.3s ease}
 .detail-remaining{display:flex;justify-content:space-between;gap:10px;margin-top:10px;
-  color:#d5e4eb;font-size:11px}
+  color:rgba(255,255,255,0.85);font-size:11px}
 .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.detail-stat{padding:13px;border:1px solid var(--border);border-radius:10px;background:#fafbfd}
-.detail-stat-label{font-size:10px;color:var(--muted);font-weight:750}
-.detail-stat-value{font-size:16px;font-weight:850;margin-top:6px;overflow-wrap:anywhere}
-.detail-stat-sub{font-size:10px;color:var(--muted);margin-top:4px}
+.detail-stat{padding:13px;border-radius:10px;}
+.detail-stat-label{font-size:10px;font-weight:750}
+.detail-stat-value{font-size:15px;font-weight:850;margin-top:6px;overflow-wrap:anywhere}
 .section-label{font-size:12px;font-weight:850;margin:19px 0 10px}
-.detail-actions{display:flex;gap:8px;flex-wrap:wrap}
+.detail-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .event{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--border)}
 .event:last-child{border-bottom:0}
 .event-icon{width:31px;height:31px;display:grid;place-items:center;
@@ -164,7 +168,7 @@ input::placeholder{color:#8493a2}
 table{width:100%;border-collapse:collapse;white-space:nowrap}
 th{text-align:left;color:var(--muted);background:#f7f9fb;font-size:10px;
   padding:13px 15px;letter-spacing:.4px}
-td{padding:13px 15px;border-top:1px solid var(--border);font-size:12px}
+td{padding:13px 15px;border-top:1px solid var(--border);font-size:12px;vertical-align:top}
 tbody tr:hover{background:#f8faff}
 .table-room{border:0;background:none;color:var(--blue);font-weight:850;padding:0}
 .alert-list{display:grid;gap:10px}
@@ -191,7 +195,7 @@ tbody tr:hover{background:#f8faff}
 .setting-title{font-size:13px;font-weight:850}
 .setting-desc{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5}
 .setting-control{display:flex;align-items:center;gap:7px;white-space:nowrap}
-.setting-control input[type=number]{width:80px}
+.setting-control input[type=number]{width:90px}
 .setting-control input[type=checkbox]{width:19px;height:19px;accent-color:var(--blue)}
 .footer{text-align:center;color:#82909d;font-size:10px;padding:25px 0 0}
 .toast{position:fixed;right:20px;bottom:20px;z-index:10;max-width:min(400px,calc(100vw - 40px));
@@ -230,8 +234,6 @@ tbody tr:hover{background:#f8faff}
   .metric-foot{font-size:10px}
   .floor{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
   .room{padding:11px 9px}
-  .room-top{align-items:flex-start;flex-direction:column}
-  .room-percent{font-size:25px;margin-top:12px}
   .panel-body{padding:12px}
   .panel-head{padding:14px}
   .search{width:100%;flex:1}
@@ -240,7 +242,7 @@ tbody tr:hover{background:#f8faff}
   .alert-card{flex-wrap:wrap}
   .alert-content{flex-basis:calc(100% - 50px)}
   .alert-actions{margin-left:46px}
-  .detail-value{font-size:38px}
+  .detail-value{font-size:32px}
   .top-right{gap:7px}
   .clock{font-size:10px}
   .demo-pill{font-size:9px;padding:6px}
@@ -317,7 +319,7 @@ tbody tr:hover{background:#f8faff}
             </div>
             <div class="panel-body">
               <div class="toolbar">
-                <input class="search" id="roomSearch" placeholder="Search room or ward…" aria-label="Search rooms">
+                <input class="search" id="roomSearch" placeholder="Search room, ward, or fluid…" aria-label="Search rooms">
                 <select id="statusFilter" aria-label="Filter by status">
                   <option value="all">All statuses</option><option value="critical">Critical</option>
                   <option value="attention">Attention</option><option value="normal">Normal</option>
@@ -328,11 +330,11 @@ tbody tr:hover{background:#f8faff}
                 </select>
               </div>
               <div class="floor" id="floor" aria-live="polite"></div>
-              <div class="notice"><strong>Demo only.</strong> All room readings, device states, and time estimates are simulated. This board is not connected to medical equipment.</div>
+              <div class="notice"><strong>Demo only.</strong> All room readings, device states, and time estimates are simulated. Multi-fluid logic is enabled. This board is not connected to medical equipment.</div>
             </div>
           </section>
           <section class="panel" id="detailPanel">
-            <div class="panel-head"><div><div class="panel-title">Room details</div>
+            <div class="panel-head"><div><div class="panel-title">Patient details</div>
               <div class="panel-subtitle">Selected room · simulated parameters</div></div>
               <span id="detailStatus" class="status-tag normal">NORMAL</span></div>
             <div class="panel-body" id="roomDetails"></div>
@@ -343,10 +345,10 @@ tbody tr:hover{background:#f8faff}
       <section id="directory" class="view">
         <section class="panel">
           <div class="panel-head"><div><div class="panel-title">Room directory</div>
-            <div class="panel-subtitle">Search, sort, and inspect all sample rooms.</div></div>
-            <input class="search" id="directorySearch" placeholder="Search room, ward, device…" aria-label="Search directory"></div>
+            <div class="panel-subtitle">Search, sort, and inspect all sample rooms and their active IVs.</div></div>
+            <input class="search" id="directorySearch" placeholder="Search room, ward, fluid…" aria-label="Search directory"></div>
           <div class="table-wrap"><table>
-            <thead><tr><th>ROOM</th><th>WARD</th><th>FLUID</th><th>EST. TIME*</th><th>STATUS</th><th>DEVICE</th><th>ACTION</th></tr></thead>
+            <thead><tr><th>ROOM</th><th>WARD</th><th>ACTIVE INFUSIONS (mL)</th><th>MIN EST. TIME*</th><th>ROOM STATUS</th><th>ACTION</th></tr></thead>
             <tbody id="directoryRows"></tbody>
           </table></div>
         </section>
@@ -356,7 +358,7 @@ tbody tr:hover{background:#f8faff}
       <section id="alerts" class="view">
         <section class="panel">
           <div class="panel-head"><div><div class="panel-title">Alert center</div>
-            <div class="panel-subtitle">Unresolved demo alerts appear first. Acknowledgment only changes this prototype's display.</div></div>
+            <div class="panel-subtitle">Unresolved demo alerts appear first. Alerts are triggered per individual fluid line.</div></div>
             <button id="ackAll" class="btn">Acknowledge all</button></div>
           <div class="panel-body"><div class="alert-list" id="alertList"></div></div>
         </section>
@@ -366,7 +368,7 @@ tbody tr:hover{background:#f8faff}
         <div class="metrics" id="deviceMetrics"></div>
         <section class="panel">
           <div class="panel-head"><div><div class="panel-title">Device inventory</div>
-            <div class="panel-subtitle">Example connectivity states, not actual connected equipment.</div></div></div>
+            <div class="panel-subtitle">Example connectivity states per individual fluid line, not actual connected equipment.</div></div></div>
           <div class="panel-body"><div id="deviceGrid" class="device-grid"></div></div>
         </section>
       </section>
@@ -374,19 +376,19 @@ tbody tr:hover{background:#f8faff}
       <section id="settings" class="view">
         <section class="panel">
           <div class="panel-head"><div><div class="panel-title">Demo settings</div>
-            <div class="panel-subtitle">Adjust visual thresholds and simulation behavior for presentation.</div></div></div>
+            <div class="panel-subtitle">Adjust visual thresholds (in mL) and simulation behavior for presentation.</div></div></div>
           <div class="panel-body settings-form">
-            <div class="setting-row"><div><div class="setting-title">Critical threshold</div>
-              <div class="setting-desc">At or below this percentage, a fluid level is marked critical.</div></div>
-              <div class="setting-control"><input type="number" id="criticalThreshold" min="1" max="30" value="10" aria-label="Critical threshold">%</div></div>
-            <div class="setting-row"><div><div class="setting-title">Attention threshold</div>
-              <div class="setting-desc">At or below this percentage, a fluid level needs attention.</div></div>
-              <div class="setting-control"><input type="number" id="attentionThreshold" min="11" max="50" value="25" aria-label="Attention threshold">%</div></div>
+            <div class="setting-row"><div><div class="setting-title">Critical volume threshold</div>
+              <div class="setting-desc">At or below this volume (mL), a fluid level is marked critical.</div></div>
+              <div class="setting-control"><input type="number" id="criticalThreshold" min="1" max="500" value="50" aria-label="Critical threshold">mL</div></div>
+            <div class="setting-row"><div><div class="setting-title">Attention volume threshold</div>
+              <div class="setting-desc">At or below this volume (mL), a fluid level needs attention.</div></div>
+              <div class="setting-control"><input type="number" id="attentionThreshold" min="10" max="1000" value="100" aria-label="Attention threshold">mL</div></div>
             <div class="setting-row"><div><div class="setting-title">Automatic demo updates</div>
-              <div class="setting-desc">Randomly decrease some sample fluid levels. Turn off for presentations.</div></div>
+              <div class="setting-desc">Randomly decrease some sample fluid levels over time.</div></div>
               <div class="setting-control"><input type="checkbox" id="autoUpdate" checked aria-label="Automatic demo updates"></div></div>
             <div class="setting-row"><div><div class="setting-title">Update interval</div>
-              <div class="setting-desc">Time between simulated updates.</div></div>
+              <div class="setting-desc">Time between simulated consumption updates.</div></div>
               <div class="setting-control"><select id="updateInterval" aria-label="Update interval">
                 <option value="5">5 seconds</option><option value="10" selected>10 seconds</option><option value="30">30 seconds</option></select></div></div>
             <div class="actions" style="padding-top:19px">
@@ -415,27 +417,57 @@ tbody tr:hover{background:#f8faff}
 <script>
 "use strict";
 
-const initialRooms = [
-  {id:"101",ward:"Medical",level:84,rate:80,device:"Connected"},
-  {id:"102",ward:"Medical",level:62,rate:100,device:"Connected"},
-  {id:"103",ward:"Medical",level:18,rate:90,device:"Connected"},
-  {id:"104",ward:"Medical",level:7,rate:80,device:"Connected"},
-  {id:"105",ward:"Surgical",level:91,rate:75,device:"Connected"},
-  {id:"106",ward:"Surgical",level:43,rate:100,device:"Connected"},
-  {id:"107",ward:"Surgical",level:22,rate:90,device:"Connected"},
-  {id:"108",ward:"Surgical",level:67,rate:80,device:"Offline"},
-  {id:"109",ward:"ICU",level:12,rate:120,device:"Connected"},
-  {id:"110",ward:"ICU",level:76,rate:110,device:"Connected"},
-  {id:"111",ward:"ICU",level:35,rate:100,device:"Connected"},
-  {id:"112",ward:"ICU",level:5,rate:120,device:"Connected"}
+const initialRoomsData = [
+  {id:"101", ward:"Medical", fluids:[
+    {fId:"101-1", name:"0.9% NaCl (Saline)", remaining:840, total:1000, rate:80, device:"Connected"},
+    {fId:"101-2", name:"Potassium Chloride", remaining:150, total:200, rate:20, device:"Connected"}
+  ]},
+  {id:"102", ward:"Medical", fluids:[
+    {fId:"102-1", name:"Lactated Ringer's", remaining:620, total:1000, rate:100, device:"Connected"}
+  ]},
+  {id:"103", ward:"Medical", fluids:[
+    {fId:"103-1", name:"Dextrose 5%", remaining:80, total:500, rate:90, device:"Connected"},
+    {fId:"103-2", name:"Antibiotic (Ceftriaxone)", remaining:25, total:100, rate:100, device:"Connected"}
+  ]},
+  {id:"104", ward:"Medical", fluids:[
+    {fId:"104-1", name:"Blood Transfusion (PRBC)", remaining:45, total:350, rate:80, device:"Connected"}
+  ]},
+  {id:"105", ward:"Surgical", fluids:[
+    {fId:"105-1", name:"Propofol", remaining:220, total:500, rate:75, device:"Connected"}
+  ]},
+  {id:"106", ward:"Surgical", fluids:[
+    {fId:"106-1", name:"Lactated Ringer's", remaining:430, total:1000, rate:100, device:"Connected"},
+    {fId:"106-2", name:"Fentanyl", remaining:95, total:100, rate:5, device:"Connected"}
+  ]},
+  {id:"107", ward:"Surgical", fluids:[
+    {fId:"107-1", name:"0.9% NaCl (Saline)", remaining:22, total:500, rate:60, device:"Connected"}
+  ]},
+  {id:"108", ward:"Surgical", fluids:[
+    {fId:"108-1", name:"0.9% NaCl (Saline)", remaining:670, total:1000, rate:80, device:"Offline"}
+  ]},
+  {id:"109", ward:"ICU", fluids:[
+    {fId:"109-1", name:"Norepinephrine", remaining:12, total:250, rate:15, device:"Connected"},
+    {fId:"109-2", name:"Vasopressin", remaining:80, total:100, rate:10, device:"Connected"},
+    {fId:"109-3", name:"Lactated Ringer's", remaining:950, total:1000, rate:120, device:"Connected"}
+  ]},
+  {id:"110", ward:"ICU", fluids:[
+    {fId:"110-1", name:"Amiodarone", remaining:150, total:500, rate:30, device:"Connected"}
+  ]},
+  {id:"111", ward:"ICU", fluids:[
+    {fId:"111-1", name:"Heparin", remaining:350, total:500, rate:25, device:"Connected"}
+  ]},
+  {id:"112", ward:"ICU", fluids:[
+    {fId:"112-1", name:"Insulin", remaining:45, total:100, rate:5, device:"Connected"},
+    {fId:"112-2", name:"Dextrose 10%", remaining:30, total:500, rate:40, device:"Connected"}
+  ]}
 ];
 
 const $ = id => document.getElementById(id);
 let rooms = cloneInitial();
 let selectedId = "103";
 let acknowledged = new Set();
-let criticalThreshold = 10;
-let attentionThreshold = 25;
+let criticalThreshold = 50; // mL
+let attentionThreshold = 100; // mL
 let autoUpdate = true;
 let intervalSeconds = 10;
 let timer = null;
@@ -443,289 +475,425 @@ let toastTimer = null;
 let currentView = "overview";
 let lastUpdated = new Date();
 
-function cloneInitial(){return initialRooms.map(r=>({...r}));}
-function escapeHtml(value){
-  return String(value).replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[c]));
+function cloneInitial(){
+  return initialRoomsData.map(r => ({
+    ...r, fluids: r.fluids.map(f => ({...f}))
+  }));
 }
-function statusInfo(room){
-  if(room.device==="Offline") return {key:"critical",label:"DEVICE OFFLINE",color:"var(--red)",bg:"var(--red-bg)"};
-  if(room.level<=criticalThreshold) return {key:"critical",label:"CRITICAL",color:"var(--red)",bg:"var(--red-bg)"};
-  if(room.level<=attentionThreshold) return {key:"attention",label:"ATTENTION",color:"#d69a25",bg:"var(--amber-bg)"};
-  return {key:"normal",label:"NORMAL",color:"var(--green)",bg:"var(--green-bg)"};
+
+function fluidStatus(fluid) {
+  if(fluid.device === "Offline") return {key:"critical", label:"OFFLINE", color:"var(--red)", bg:"var(--red-bg)"};
+  if(fluid.remaining <= criticalThreshold) return {key:"critical", label:"CRITICAL", color:"var(--red)", bg:"var(--red-bg)"};
+  if(fluid.remaining <= attentionThreshold) return {key:"attention", label:"ATTENTION", color:"#d69a25", bg:"var(--amber-bg)"};
+  return {key:"normal", label:"NORMAL", color:"var(--green)", bg:"var(--green-bg)"};
 }
-function remainingMinutes(room){
-  // Simplified demo math only. Not a clinical estimate.
-  return Math.max(0,Math.round(room.level*5/(room.rate/60)));
+
+function roomStatus(room) {
+  let hasCrit = false, hasAtt = false;
+  for(let f of room.fluids) {
+    const s = fluidStatus(f).key;
+    if(s === "critical") hasCrit = true;
+    if(s === "attention") hasAtt = true;
+  }
+  if(hasCrit) return {key:"critical", label:"CRITICAL", color:"var(--red)", bg:"var(--red-bg)"};
+  if(hasAtt) return {key:"attention", label:"ATTENTION", color:"#d69a25", bg:"var(--amber-bg)"};
+  return {key:"normal", label:"NORMAL", color:"var(--green)", bg:"var(--green-bg)"};
 }
+
+function remainingMinutes(fluid){
+  if(fluid.rate <= 0) return 0;
+  return Math.max(0, Math.round((fluid.remaining / fluid.rate) * 60));
+}
+
 function timeText(minutes){
-  if(minutes<=0)return "0 min";
-  if(minutes<60)return `${minutes} min`;
+  if(minutes <= 0) return "0 min";
+  if(minutes < 60) return `${minutes} min`;
   return `${Math.floor(minutes/60)}h ${minutes%60}m`;
 }
+
 function notify(message){
-  $("toast").textContent=message;
+  $("toast").textContent = message;
   $("toast").classList.add("show");
   clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>$("toast").classList.remove("show"),2600);
+  toastTimer = setTimeout(() => $("toast").classList.remove("show"), 2600);
 }
+
 function updateClock(){
-  $("clock").textContent=new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+  $("clock").textContent = new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit", second:"2-digit"});
 }
+
 function renderMetrics(){
-  const normal=rooms.filter(r=>statusInfo(r).key==="normal").length;
-  const attention=rooms.filter(r=>statusInfo(r).key==="attention").length;
-  const critical=rooms.filter(r=>statusInfo(r).key==="critical").length;
-  const online=rooms.filter(r=>r.device==="Connected").length;
-  const cards=[
-    ["Monitored rooms",rooms.length,"Across 3 sample wards","neutral"],
-    ["Normal status",normal,`${Math.round(normal/rooms.length*100)}% of sample rooms`,"good"],
-    ["Needs review",attention+critical,`${critical} critical · ${attention} attention`,"urgent"],
-    ["Devices online",online,`${rooms.length-online} offline`,"caution"]
+  const normal = rooms.filter(r => roomStatus(r).key === "normal").length;
+  const attention = rooms.filter(r => roomStatus(r).key === "attention").length;
+  const critical = rooms.filter(r => roomStatus(r).key === "critical").length;
+  
+  const allFluids = rooms.flatMap(r => r.fluids);
+  const onlineCount = allFluids.filter(f => f.device === "Connected").length;
+  const offlineCount = allFluids.length - onlineCount;
+
+  const cards = [
+    ["Monitored patients", rooms.length, "Across 3 sample wards", "neutral"],
+    ["Normal status", normal, `${Math.round(normal/rooms.length*100)}% of patients`, "good"],
+    ["Needs review", attention + critical, `${critical} critical · ${attention} attention`, "urgent"],
+    ["Active sensors", onlineCount, `${offlineCount} offline`, "caution"]
   ];
-  $("metrics").innerHTML=cards.map(c=>`
+  $("metrics").innerHTML = cards.map(c => `
     <article class="metric ${c[3]}">
       <div class="metric-label">${c[0]}</div><div class="metric-value">${c[1]}</div>
       <div class="metric-foot">${c[2]}</div>
     </article>`).join("");
-  $("alertCount").textContent=rooms.filter(r=>statusInfo(r).key!=="normal"&&!acknowledged.has(r.id)).length;
-  $("boardSummary").textContent=`${rooms.length} sample rooms · Updated ${lastUpdated.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"})}`;
+  
+  let unackedAlerts = 0;
+  rooms.forEach(r => r.fluids.forEach(f => {
+    if(fluidStatus(f).key !== "normal" && !acknowledged.has(f.fId)) unackedAlerts++;
+  }));
+  
+  $("alertCount").textContent = unackedAlerts;
+  $("boardSummary").textContent = `${rooms.length} sample rooms · Updated ${lastUpdated.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"})}`;
 }
+
 function filteredRooms(){
-  const query=$("roomSearch").value.toLowerCase().trim();
-  const status=$("statusFilter").value;
-  const ward=$("wardFilter").value;
-  return rooms.filter(r=>
-    (`${r.id} ${r.ward}`.toLowerCase().includes(query))&&
-    (status==="all"||statusInfo(r).key===status)&&
-    (ward==="all"||r.ward===ward)
-  ).sort((a,b)=>{
-    const priority={critical:0,attention:1,normal:2};
-    return priority[statusInfo(a).key]-priority[statusInfo(b).key]||a.id.localeCompare(b.id);
+  const query = $("roomSearch").value.toLowerCase().trim();
+  const status = $("statusFilter").value;
+  const ward = $("wardFilter").value;
+  return rooms.filter(r => {
+    const fNames = r.fluids.map(f => f.name).join(" ");
+    return (`${r.id} ${r.ward} ${fNames}`.toLowerCase().includes(query)) &&
+           (status === "all" || roomStatus(r).key === status) &&
+           (ward === "all" || r.ward === ward);
+  }).sort((a,b) => {
+    const priority = {critical:0, attention:1, normal:2};
+    return priority[roomStatus(a).key] - priority[roomStatus(b).key] || a.id.localeCompare(b.id);
   });
 }
+
 function renderFloor(){
-  const filtered=filteredRooms();
-  $("floor").innerHTML=filtered.length?filtered.map(r=>{
-    const s=statusInfo(r);
-    return `<button class="room ${r.id===selectedId?"selected":""}" data-room="${r.id}"
-      style="--status:${s.color}" aria-pressed="${r.id===selectedId}"
-      aria-label="Room ${r.id}, ${Math.round(r.level)} percent remaining, ${s.label}">
+  const filtered = filteredRooms();
+  $("floor").innerHTML = filtered.length ? filtered.map(r => {
+    const rs = roomStatus(r);
+    return `<button class="room ${r.id === selectedId ? "selected" : ""}" onclick="window.selectRoom('${r.id}')"
+      style="--status:${rs.color}" aria-pressed="${r.id === selectedId}"
+      aria-label="Room ${r.id}, ${rs.label}">
       <div class="room-top"><span class="room-name">ROOM ${r.id}</span>
-        <span class="status-tag ${s.key}">${s.label}</span></div>
-      <div class="room-percent">${Math.round(r.level)}<small>% remaining</small></div>
-      <div class="progress" role="progressbar" aria-label="Fluid level"
-        aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(r.level)}">
-        <div class="progress-fill" style="width:${r.level}%"></div></div>
-      <div class="room-bottom"><span>${r.ward}</span><span>${timeText(remainingMinutes(r))}*</span></div>
+        <span class="status-tag ${rs.key}">${rs.label}</span></div>
+      
+      <div class="fluids-list">
+        ${r.fluids.map(f => {
+          const fs = fluidStatus(f);
+          const pct = Math.max(0, Math.min(100, (f.remaining / f.total) * 100));
+          return `
+            <div class="fluid-item">
+              <div class="fluid-item-head">
+                <span class="fluid-item-name" title="${f.name}">${f.name}</span>
+                <span class="fluid-item-val" style="color:${fs.color}">${Math.round(f.remaining)} <span style="font-size:10px; font-weight:600; color:var(--muted)">mL</span></span>
+              </div>
+              <div class="progress">
+                <div class="progress-fill" style="width:${pct}%; background:${fs.color}"></div>
+              </div>
+              <div class="fluid-item-time">${timeText(remainingMinutes(f))} left</div>
+            </div>`;
+        }).join("")}
+      </div>
+
+      <div class="room-bottom"><span>${r.ward}</span><span>${r.fluids.length} active line${r.fluids.length!==1?'s':''}</span></div>
     </button>`;
-  }).join(""):`<div class="empty-state">No rooms match these filters. Try changing your search.</div>`;
-  $("floor").querySelectorAll("[data-room]").forEach(b=>b.addEventListener("click",()=>selectRoom(b.dataset.room)));
+  }).join("") : `<div class="empty-state">No rooms match these filters. Try changing your search.</div>`;
 }
-function selectRoom(id){
-  selectedId=id;
+
+window.selectRoom = function(id){
+  selectedId = id;
   renderFloor();
   renderDetails();
-}
+};
+
+window.handleAdjust = function(rId, fId){
+  const r = rooms.find(x => x.id === rId);
+  const f = r.fluids.find(x => x.fId === fId);
+  const value = prompt(`Set remaining mL for ${f.name} (0 - ${f.total}):`, Math.round(f.remaining));
+  if(value === null) return;
+  const num = Number(value);
+  if(!Number.isFinite(num) || num < 0 || num > f.total){
+    notify(`Enter a valid number between 0 and ${f.total}.`); return;
+  }
+  f.remaining = num;
+  acknowledged.delete(fId);
+  touchData(); renderAll();
+  notify(`Updated ${f.name} to ${Math.round(num)} mL.`);
+};
+
+window.handleToggleDevice = function(rId, fId){
+  const r = rooms.find(x => x.id === rId);
+  const f = r.fluids.find(x => x.fId === fId);
+  f.device = f.device === "Connected" ? "Offline" : "Connected";
+  acknowledged.delete(fId);
+  touchData(); renderAll();
+  notify(`${f.name} sensor is now ${f.device}.`);
+};
+
+window.handleAck = function(fId){
+  if(acknowledged.has(fId)) acknowledged.delete(fId);
+  else acknowledged.add(fId);
+  renderAll();
+  notify(`Alert acknowledgment updated.`);
+};
+
 function renderDetails(){
-  const r=rooms.find(x=>x.id===selectedId);
-  if(!r){$("roomDetails").innerHTML='<div class="empty-state">Select a room to inspect its details.</div>';return;}
-  const s=statusInfo(r);
-  $("detailStatus").className=`status-tag ${s.key}`;
-  $("detailStatus").textContent=s.label;
-  $("roomDetails").innerHTML=`
-    <div class="detail-hero">
-      <div class="detail-hero-top"><div><div class="detail-room">Room ${r.id}</div>
-        <div class="detail-type">${r.ward} ward · Sample infusion</div></div>
-        <span aria-hidden="true" style="font-size:24px">◉</span></div>
-      <div class="detail-value">${Math.round(r.level)}<span>% remaining</span></div>
-      <div class="detail-bar" role="progressbar" aria-label="Fluid remaining"
-        aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(r.level)}">
-        <div style="width:${r.level}%;background:${s.color}"></div></div>
-      <div class="detail-remaining"><span>Illustrative time estimate*</span><strong>${timeText(remainingMinutes(r))}</strong></div>
+  const r = rooms.find(x => x.id === selectedId);
+  if(!r){ $("roomDetails").innerHTML = '<div class="empty-state">Select a room to inspect its details.</div>'; return; }
+  
+  const rs = roomStatus(r);
+  $("detailStatus").className = `status-tag ${rs.key}`;
+  $("detailStatus").textContent = rs.label;
+  
+  const cardsHtml = r.fluids.map(f => {
+    const fs = fluidStatus(f);
+    const pct = Math.max(0, Math.min(100, (f.remaining / f.total) * 100));
+    
+    let bgStyle = "background:linear-gradient(130deg,#123047,#20566b);";
+    if(fs.key === "critical") bgStyle = "background:linear-gradient(130deg,#8b1b24,#5c0c14);";
+    else if(fs.key === "attention") bgStyle = "background:linear-gradient(130deg,#8c5700,#5c3800);";
+
+    return `
+    <div class="detail-hero" style="${bgStyle}">
+      <div class="detail-hero-top">
+        <div>
+          <div class="detail-room">${f.name}</div>
+          <div class="detail-type">Total capacity: ${f.total} mL</div>
+        </div>
+        <span class="status-tag ${fs.key}">${fs.label}</span>
+      </div>
+      <div class="detail-value">${Math.round(f.remaining)}<span>mL remaining</span></div>
+      <div class="detail-bar" role="progressbar" aria-valuenow="${Math.round(f.remaining)}" aria-valuemin="0" aria-valuemax="${f.total}">
+        <div style="width:${pct}%;background:${fs.key==='normal'?'#61d7ae':'#fff'}"></div>
+      </div>
+      <div class="detail-remaining">
+        <span>Illustrative time estimate*</span>
+        <strong>${timeText(remainingMinutes(f))}</strong>
+      </div>
+      
+      <div class="detail-grid" style="margin-top:20px; margin-bottom:15px">
+        <div class="detail-stat" style="background:#ffffff15; border:none; color:#fff;">
+          <div class="detail-stat-label" style="color:#c5d9e4">FLOW RATE</div>
+          <div class="detail-stat-value">${f.rate} mL/h</div>
+        </div>
+        <div class="detail-stat" style="background:#ffffff15; border:none; color:#fff;">
+          <div class="detail-stat-label" style="color:#c5d9e4">DEVICE STATUS</div>
+          <div class="detail-stat-value" style="color:${f.device==='Connected'?'#61d7ae':'#ffa7b0'}">${f.device}</div>
+        </div>
+      </div>
+      
+      <div class="detail-actions">
+        <button class="btn small" style="color:var(--navy); background:#fff; border:none" onclick="window.handleAdjust('${r.id}','${f.fId}')">Edit volume</button>
+        <button class="btn small" style="color:#fff; background:rgba(255,255,255,0.2); border:none" onclick="window.handleToggleDevice('${r.id}','${f.fId}')">${f.device==="Connected"?"Simulate offline":"Simulate reconnect"}</button>
+        ${fs.key !== 'normal' ? `<button class="btn small" style="color:#fff; background:rgba(255,255,255,0.2); border:none" onclick="window.handleAck('${f.fId}')">${acknowledged.has(f.fId)?"Unacknowledge alert":"Acknowledge alert"}</button>` : ''}
+      </div>
+    </div>`;
+  }).join("");
+
+  $("roomDetails").innerHTML = `
+    <div style="margin-bottom:15px; font-size:13px; font-weight:800; color:var(--text)">
+      Room ${r.id} · ${r.ward} Ward · ${r.fluids.length} active infusion${r.fluids.length!==1?'s':''}
     </div>
-    <div class="detail-grid">
-      <div class="detail-stat"><div class="detail-stat-label">ASSUMED FLOW RATE</div>
-        <div class="detail-stat-value">${r.rate} mL/h</div><div class="detail-stat-sub">Demo parameter</div></div>
-      <div class="detail-stat"><div class="detail-stat-label">DEVICE STATUS</div>
-        <div class="detail-stat-value" style="color:${r.device==="Connected"?"var(--green)":"var(--red)"}">${r.device}</div>
-        <div class="detail-stat-sub">Simulated connection</div></div>
-      <div class="detail-stat"><div class="detail-stat-label">WARD</div><div class="detail-stat-value">${r.ward}</div>
-        <div class="detail-stat-sub">Room ${r.id}</div></div>
-      <div class="detail-stat"><div class="detail-stat-label">DISPLAY STATUS</div><div class="detail-stat-value">${s.label}</div>
-        <div class="detail-stat-sub">Based on demo thresholds</div></div>
-    </div>
-    <div class="section-label">Demo controls</div>
-    <div class="detail-actions">
-      <button class="btn primary" id="adjustLevel">Edit sample level</button>
-      <button class="btn" id="toggleDevice">${r.device==="Connected"?"Simulate offline":"Simulate reconnect"}</button>
-      <button class="btn" id="ackRoom"> ${acknowledged.has(r.id)?"Unacknowledge alert":"Acknowledge alert"}</button>
-    </div>
-    <div class="section-label">Latest sample activity</div>
-    <div class="event"><div class="event-icon">◷</div><div><div class="event-title">Last simulated update</div>
-      <div class="event-sub">${lastUpdated.toLocaleTimeString()} · Sample level ${Math.round(r.level)}%</div></div></div>
-    <div class="event"><div class="event-icon">⌁</div><div><div class="event-title">Connectivity</div>
-      <div class="event-sub">${r.device==="Connected"?"This sample device is marked connected.":"This sample device is marked offline."}</div></div></div>
-    <div class="notice"><strong>Not for clinical use.</strong> The displayed time is a simplified demonstration calculation, not a prediction of when an actual infusion will empty.</div>`;
-  $("adjustLevel").addEventListener("click",()=>{
-    const value=prompt("Set sample fluid percentage (0–100):",Math.round(r.level));
-    if(value===null)return;
-    if(value.trim()===""||!Number.isFinite(Number(value))||Number(value)<0||Number(value)>100){
-      notify("Enter a number between 0 and 100.");return;
-    }
-    r.level=Number(value);
-    acknowledged.delete(r.id);
-    touchData();renderAll();notify(`Demo level for room ${r.id} updated.`);
-  });
-  $("toggleDevice").addEventListener("click",()=>{
-    r.device=r.device==="Connected"?"Offline":"Connected";
-    acknowledged.delete(r.id);touchData();renderAll();
-    notify(`Sample device for room ${r.id}: ${r.device}.`);
-  });
-  $("ackRoom").addEventListener("click",()=>{
-    if(acknowledged.has(r.id))acknowledged.delete(r.id);else acknowledged.add(r.id);
-    renderAll();notify(`Alert acknowledgment updated for room ${r.id}.`);
-  });
+    ${cardsHtml}
+    <div class="event" style="margin-top:10px"><div class="event-icon">◷</div><div>
+      <div class="event-title">Last simulated update</div>
+      <div class="event-sub">${lastUpdated.toLocaleTimeString()}</div>
+    </div></div>
+    <div class="notice"><strong>Not for clinical use.</strong> The displayed time is a simplified demonstration calculation, not a prediction of when an actual infusion will empty.</div>
+  `;
 }
+
 function renderDirectory(){
-  const query=$("directorySearch").value.toLowerCase().trim();
-  const data=rooms.filter(r=>`${r.id} ${r.ward} ${r.device}`.toLowerCase().includes(query))
-    .sort((a,b)=>({critical:0,attention:1,normal:2}[statusInfo(a).key]-{critical:0,attention:1,normal:2}[statusInfo(b).key]));
-  $("directoryRows").innerHTML=data.map(r=>{
-    const s=statusInfo(r);
-    return `<tr><td><button class="table-room" data-open="${r.id}">Room ${r.id}</button></td>
-      <td>${r.ward}</td><td>${Math.round(r.level)}%</td><td>${timeText(remainingMinutes(r))}*</td>
-      <td><span class="status-tag ${s.key}">${s.label}</span></td>
-      <td>${r.device}</td><td><button class="btn small" data-open="${r.id}">Inspect</button></td></tr>`;
-  }).join("")||'<tr><td colspan="7">No matching rooms found.</td></tr>';
-  $("directoryRows").querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",()=>{
-    selectRoom(b.dataset.open);showView("overview");
-  }));
+  const query = $("directorySearch").value.toLowerCase().trim();
+  const data = rooms.filter(r => {
+    const fNames = r.fluids.map(f => f.name).join(" ");
+    return `${r.id} ${r.ward} ${fNames}`.toLowerCase().includes(query);
+  }).sort((a,b) => {
+    const priority = {critical:0, attention:1, normal:2};
+    return priority[roomStatus(a).key] - priority[roomStatus(b).key] || a.id.localeCompare(b.id);
+  });
+  
+  $("directoryRows").innerHTML = data.map(r => {
+    const rs = roomStatus(r);
+    const minTime = Math.min(...r.fluids.map(remainingMinutes));
+    
+    const fluidsHtml = r.fluids.map(f => {
+      const fs = fluidStatus(f);
+      return `<div style="margin-bottom:5px; line-height:1.2;">
+        <span style="font-weight:750">${f.name}</span>: ${Math.round(f.remaining)}mL 
+        <span class="status-tag ${fs.key}" style="font-size:8px; padding:2px 4px; margin-left:4px">${fs.label}</span>
+      </div>`;
+    }).join("");
+
+    return `<tr>
+      <td><button class="table-room" onclick="window.selectRoom('${r.id}'); window.showView('overview');">Room ${r.id}</button></td>
+      <td>${r.ward}</td>
+      <td>${fluidsHtml}</td>
+      <td>${timeText(minTime)}*</td>
+      <td><span class="status-tag ${rs.key}">${rs.label}</span></td>
+      <td><button class="btn small" onclick="window.selectRoom('${r.id}'); window.showView('overview');">Inspect</button></td>
+    </tr>`;
+  }).join("") || '<tr><td colspan="6"><div class="empty-state">No matching rooms found.</div></td></tr>';
 }
+
 function renderAlerts(){
-  const alerts=rooms.filter(r=>statusInfo(r).key!=="normal")
-    .sort((a,b)=>{
-      const aa=acknowledged.has(a.id)?1:0,bb=acknowledged.has(b.id)?1:0;
-      return aa-bb||({critical:0,attention:1}[statusInfo(a).key]-{critical:0,attention:1}[statusInfo(b).key])||a.id.localeCompare(b.id);
+  const alerts = [];
+  rooms.forEach(r => {
+    r.fluids.forEach(f => {
+      const s = fluidStatus(f);
+      if(s.key !== "normal") alerts.push({ room: r, fluid: f, s: s });
     });
-  $("alertList").innerHTML=alerts.length?alerts.map(r=>{
-    const s=statusInfo(r),done=acknowledged.has(r.id);
-    const deviceOnly=r.device==="Offline"&&r.level>attentionThreshold;
-    const reason=deviceOnly?"Device disconnected":r.device==="Offline"?"Device disconnected and fluid level critical":
-      r.level<=criticalThreshold?"Fluid level at or below demo critical threshold":"Fluid level at or below demo attention threshold";
+  });
+
+  alerts.sort((a,b) => {
+    const aa = acknowledged.has(a.fluid.fId) ? 1 : 0;
+    const bb = acknowledged.has(b.fluid.fId) ? 1 : 0;
+    return aa - bb || ({critical:0,attention:1}[a.s.key] - {critical:0,attention:1}[b.s.key]) || a.room.id.localeCompare(b.room.id);
+  });
+
+  $("alertList").innerHTML = alerts.length ? alerts.map(alert => {
+    const {room, fluid, s} = alert;
+    const done = acknowledged.has(fluid.fId);
+    const deviceOnly = fluid.device === "Offline" && fluid.remaining > attentionThreshold;
+    const reason = deviceOnly ? "Sensor disconnected" : 
+                   fluid.device === "Offline" ? "Sensor disconnected & fluid low" : 
+                   fluid.remaining <= criticalThreshold ? `Fluid critical (≤ ${criticalThreshold} mL)` : 
+                   `Fluid attention (≤ ${attentionThreshold} mL)`;
+    
     return `<article class="alert-card ${s.key} ${done?"acknowledged":""}">
       <div class="alert-symbol" style="--alert-bg:${s.bg}">${s.key==="critical"?"!":"◷"}</div>
-      <div class="alert-content"><div class="alert-title">Room ${r.id} · ${reason}${done?" · ACKNOWLEDGED":""}</div>
-        <div class="alert-description">${r.ward} ward · Sample fluid: ${Math.round(r.level)}% · Device: ${r.device}. *Time estimate: ${timeText(remainingMinutes(r))}.</div></div>
-      <div class="alert-actions"><button class="btn small" data-ack="${r.id}">${done?"Unacknowledge":"Acknowledge"}</button>
-        <button class="btn small" data-inspect="${r.id}">Inspect</button></div>
+      <div class="alert-content"><div class="alert-title">Room ${room.id} · ${fluid.name} · ${reason}${done?" · ACKNOWLEDGED":""}</div>
+        <div class="alert-description">${room.ward} ward · Current volume: ${Math.round(fluid.remaining)} / ${fluid.total} mL · Est time: ${timeText(remainingMinutes(fluid))}.</div></div>
+      <div class="alert-actions">
+        <button class="btn small" onclick="window.handleAck('${fluid.fId}')">${done?"Unacknowledge":"Acknowledge"}</button>
+        <button class="btn small" onclick="window.selectRoom('${room.id}'); window.showView('overview');">Inspect</button>
+      </div>
     </article>`;
-  }).join(""):'<div class="empty-state">No active demo alerts. This does not indicate the status of any real patient or device.</div>';
-  $("alertList").querySelectorAll("[data-ack]").forEach(b=>b.addEventListener("click",()=>{
-    const id=b.dataset.ack;
-    if(acknowledged.has(id))acknowledged.delete(id);else acknowledged.add(id);
-    renderAll();notify(`Acknowledgment updated for room ${id}.`);
-  }));
-  $("alertList").querySelectorAll("[data-inspect]").forEach(b=>b.addEventListener("click",()=>{
-    selectRoom(b.dataset.inspect);showView("overview");
-  }));
+  }).join("") : '<div class="empty-state">No active demo alerts. This does not indicate the status of any real patient or device.</div>';
 }
+
 function renderDevices(){
-  const online=rooms.filter(r=>r.device==="Connected").length;
-  $("deviceMetrics").innerHTML=[
-    ["Registered sample devices",rooms.length],
-    ["Connected",online],
-    ["Offline",rooms.length-online],
-    ["Connectivity",`${Math.round(online/rooms.length*100)}%`]
-  ].map((c,i)=>`<article class="metric ${i===1?"good":i===2?"urgent":"neutral"}">
+  const allFluids = rooms.flatMap(r => r.fluids.map(f => ({room: r, fluid: f})));
+  const online = allFluids.filter(x => x.fluid.device === "Connected").length;
+  
+  $("deviceMetrics").innerHTML = [
+    ["Registered IV sensors", allFluids.length],
+    ["Connected", online],
+    ["Offline", allFluids.length - online],
+    ["Connectivity", `${allFluids.length ? Math.round(online/allFluids.length*100) : 0}%`]
+  ].map((c,i) => `<article class="metric ${i===1?"good":i===2?"urgent":"neutral"}">
     <div class="metric-label">${c[0]}</div><div class="metric-value">${c[1]}</div>
     <div class="metric-foot">Illustrative inventory only</div></article>`).join("");
-  $("deviceGrid").innerHTML=rooms.map(r=>`
+  
+  $("deviceGrid").innerHTML = allFluids.map(d => `
     <article class="device-card"><div class="device-top"><div>
-      <div class="device-name">IV sensor · Room ${r.id}</div><div class="device-id">IVS-${r.id}-DEMO</div></div>
-      <span aria-hidden="true" style="font-size:23px">⌁</span></div>
-      <div class="device-state" style="color:${r.device==="Connected"?"var(--green)":"var(--red)"}">● ${r.device}</div>
-      <div class="event-sub">${r.ward} ward · Sample fluid ${Math.round(r.level)}%</div>
-      <button class="btn small" style="margin-top:13px" data-device="${r.id}">${r.device==="Connected"?"Simulate disconnect":"Simulate reconnect"}</button></article>`).join("");
-  $("deviceGrid").querySelectorAll("[data-device]").forEach(b=>b.addEventListener("click",()=>{
-    const r=rooms.find(x=>x.id===b.dataset.device);
-    r.device=r.device==="Connected"?"Offline":"Connected";
-    acknowledged.delete(r.id);touchData();renderAll();notify(`Sample device for room ${r.id}: ${r.device}.`);
-  }));
+      <div class="device-name">${d.fluid.name} sensor</div><div class="device-id">RM${d.room.id}-${d.fluid.fId}</div></div>
+      <span aria-hidden="true" style="font-size:23px; color:var(--muted)">⌁</span></div>
+      <div class="device-state" style="color:${d.fluid.device==="Connected"?"var(--green)":"var(--red)"}">● ${d.fluid.device}</div>
+      <div class="event-sub">Room ${d.room.id} (${d.room.ward}) · ${Math.round(d.fluid.remaining)} mL remaining</div>
+      <button class="btn small" style="margin-top:13px" onclick="window.handleToggleDevice('${d.room.id}','${d.fluid.fId}')">${d.fluid.device==="Connected"?"Simulate disconnect":"Simulate reconnect"}</button></article>`).join("");
 }
+
 function renderAll(){
-  renderMetrics();renderFloor();renderDetails();renderDirectory();renderAlerts();renderDevices();
+  renderMetrics(); renderFloor(); renderDetails(); renderDirectory(); renderAlerts(); renderDevices();
 }
-function showView(view){
-  currentView=view;
-  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===view));
-  document.querySelectorAll("[data-view]").forEach(b=>{
-    const active=b.dataset.view===view;
-    b.classList.toggle("active",active);
-    if(b.classList.contains("nav-item"))active?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current");
+
+window.showView = function(view){
+  currentView = view;
+  document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.id === view));
+  document.querySelectorAll("[data-view]").forEach(b => {
+    const active = b.dataset.view === view;
+    b.classList.toggle("active", active);
+    if(b.classList.contains("nav-item")) active ? b.setAttribute("aria-current","page") : b.removeAttribute("aria-current");
   });
-  const titles={
-    overview:["Infusion overview","Scan the ward, identify exceptions, and inspect a room."],
-    directory:["Room directory","Find a room and inspect its sample reading."],
-    alerts:["Alert center","Review and acknowledge simulated exceptions."],
-    devices:["Device inventory","Inspect simulated sensor connectivity."],
-    settings:["Demo settings","Configure the prototype's display and simulation."]
+  const titles = {
+    overview: ["Infusion overview", "Scan the ward, identify exceptions, and inspect a room."],
+    directory: ["Room directory", "Find a room and inspect its active infusions."],
+    alerts: ["Alert center", "Review and acknowledge simulated exceptions."],
+    devices: ["Device inventory", "Inspect simulated sensor connectivity per fluid line."],
+    settings: ["Demo settings", "Configure the prototype's display and simulation."]
   };
-  $("breadcrumb").textContent=titles[view][0];
-  $("pageTitle").textContent=titles[view][0];
-  $("pageSubtitle").textContent=titles[view][1];
-  window.scrollTo({top:0,behavior:"smooth"});
+  $("breadcrumb").textContent = titles[view][0];
+  $("pageTitle").textContent = titles[view][0];
+  $("pageSubtitle").textContent = titles[view][1];
+  window.scrollTo({top:0, behavior:"smooth"});
 }
-function touchData(){lastUpdated=new Date();}
+
+function touchData(){ lastUpdated = new Date(); }
+
 function simulateUpdate(){
-  rooms.forEach(r=>{
-    if(Math.random()<.7)r.level=Math.max(0,Math.round((r.level-Math.random()*3)*10)/10);
+  rooms.forEach(r => {
+    r.fluids.forEach(f => {
+      // Simulate random small mL drops to simulate active infusion
+      if(Math.random() < 0.8 && f.remaining > 0) {
+        f.remaining = Math.max(0, f.remaining - (Math.random() * 3 + 0.5));
+      }
+    });
   });
-  touchData();renderAll();notify("Sample readings updated. No equipment was contacted.");
+  touchData(); renderAll();
 }
-function resetDemo(){
-  rooms=cloneInitial();selectedId="103";acknowledged.clear();
-  $("roomSearch").value="";$("statusFilter").value="all";$("wardFilter").value="all";$("directorySearch").value="";
-  touchData();renderAll();notify("Demo values restored.");
-}
-function configureTimer(){
-  clearInterval(timer);timer=null;
-  if(autoUpdate)timer=setInterval(simulateUpdate,intervalSeconds*1000);
-  $("pauseBtn").textContent=autoUpdate?"Pause simulation":"Resume simulation";
-}
-document.querySelectorAll(".nav-item,.mobile-nav button").forEach(b=>
-  b.addEventListener("click",()=>showView(b.dataset.view)));
-["roomSearch","statusFilter","wardFilter"].forEach(id=>
-  $(id).addEventListener(id==="roomSearch"?"input":"change",renderFloor));
-$("directorySearch").addEventListener("input",renderDirectory);
-$("updateBtn").addEventListener("click",simulateUpdate);
-$("resetBtn").addEventListener("click",resetDemo);
-$("ackAll").addEventListener("click",()=>{
-  rooms.filter(r=>statusInfo(r).key!=="normal").forEach(r=>acknowledged.add(r.id));
-  renderAll();notify("All active demo alerts acknowledged.");
-});
-$("saveSettings").addEventListener("click",()=>{
-  const c=Number($("criticalThreshold").value),a=Number($("attentionThreshold").value);
-  if(!Number.isInteger(c)||!Number.isInteger(a)||c<1||c>30||a<=c||a>50){
-    notify("Use a critical threshold of 1–30% and an attention threshold above it, up to 50%.");return;
-  }
-  criticalThreshold=c;attentionThreshold=a;autoUpdate=$("autoUpdate").checked;
-  intervalSeconds=Number($("updateInterval").value);
-  configureTimer();renderAll();notify("Demo settings saved for this session.");
-});
-$("pauseBtn").addEventListener("click",()=>{
-  autoUpdate=!autoUpdate;$("autoUpdate").checked=autoUpdate;
-  configureTimer();notify(autoUpdate?"Demo simulation resumed.":"Demo simulation paused.");
-});
-$("autoUpdate").addEventListener("change",()=>{
-  autoUpdate=$("autoUpdate").checked;configureTimer();
-});
-$("updateInterval").addEventListener("change",()=>{
-  intervalSeconds=Number($("updateInterval").value);configureTimer();
+
+$("updateBtn").addEventListener("click", () => {
+  simulateUpdate();
+  notify("Sample readings updated. No equipment was contacted.");
 });
 
-renderAll();updateClock();setInterval(updateClock,1000);configureTimer();
+function resetDemo(){
+  rooms = cloneInitial();
+  selectedId = "103";
+  acknowledged.clear();
+  $("roomSearch").value = ""; $("statusFilter").value = "all"; $("wardFilter").value = "all"; $("directorySearch").value = "";
+  touchData(); renderAll(); notify("Demo values restored.");
+}
+
+function configureTimer(){
+  clearInterval(timer); timer = null;
+  if(autoUpdate) timer = setInterval(simulateUpdate, intervalSeconds * 1000);
+  $("pauseBtn").textContent = autoUpdate ? "Pause simulation" : "Resume simulation";
+}
+
+document.querySelectorAll(".nav-item, .mobile-nav button").forEach(b =>
+  b.addEventListener("click", () => window.showView(b.dataset.view)));
+
+["roomSearch","statusFilter","wardFilter"].forEach(id =>
+  $(id).addEventListener(id === "roomSearch" ? "input" : "change", renderFloor));
+
+$("directorySearch").addEventListener("input", renderDirectory);
+$("resetBtn").addEventListener("click", resetDemo);
+
+$("ackAll").addEventListener("click", () => {
+  rooms.forEach(r => {
+    r.fluids.forEach(f => {
+      if(fluidStatus(f).key !== "normal") acknowledged.add(f.fId);
+    });
+  });
+  renderAll(); notify("All active demo alerts acknowledged.");
+});
+
+$("saveSettings").addEventListener("click", () => {
+  const c = Number($("criticalThreshold").value), a = Number($("attentionThreshold").value);
+  if(!Number.isInteger(c) || !Number.isInteger(a) || c < 1 || c > 500 || a <= c || a > 1000){
+    notify("Use a critical threshold of 1–500 mL and an attention threshold above it, up to 1000 mL."); return;
+  }
+  criticalThreshold = c; attentionThreshold = a; autoUpdate = $("autoUpdate").checked;
+  intervalSeconds = Number($("updateInterval").value);
+  configureTimer(); renderAll(); notify("Demo settings saved for this session.");
+});
+
+$("pauseBtn").addEventListener("click", () => {
+  autoUpdate = !autoUpdate; $("autoUpdate").checked = autoUpdate;
+  configureTimer(); notify(autoUpdate ? "Demo simulation resumed." : "Demo simulation paused.");
+});
+
+$("autoUpdate").addEventListener("change", () => {
+  autoUpdate = $("autoUpdate").checked; configureTimer();
+});
+
+$("updateInterval").addEventListener("change", () => {
+  intervalSeconds = Number($("updateInterval").value); configureTimer();
+});
+
+renderAll(); updateClock(); setInterval(updateClock, 1000); configureTimer();
 </script>
 </body>
 </html>
