@@ -20,6 +20,8 @@
   --green-bg:#e6f5ed;
   --amber:#996000;
   --amber-bg:#fff2d8;
+  --purple:#7c3aed;
+  --purple-bg:#f5f3ff;
   --red:#bd303b;
   --red-bg:#ffeaec;
   --shadow:0 3px 12px #193b5010;
@@ -125,17 +127,19 @@ input::placeholder{color:#8493a2}
 .status-tag.normal{color:var(--green);background:var(--green-bg)}
 .status-tag.attention{color:var(--amber);background:var(--amber-bg)}
 .status-tag.critical{color:var(--red);background:var(--red-bg)}
+.status-tag.erratic{color:var(--purple);background:var(--purple-bg)}
+.status-tag.detached{color:var(--red);background:var(--red-bg)}
 .status-tag.neutral{color:#526477;background:#edf1f5}
 
 /* Fluids mini-bars inside room card */
-.fluids-list{display:flex;flex-direction:column;gap:12px;margin-top:6px;width:100%}
-.fluid-item{display:flex;flex-direction:column;gap:4px}
+.fluids-list{display:flex;flex-direction:column;gap:10px;margin-top:6px;width:100%}
+.fluid-item{display:flex;flex-direction:column;gap:3px;padding:6px;background:#f8fafc;border-radius:6px;border:1px solid var(--border)}
 .fluid-item-head{display:flex;justify-content:space-between;align-items:baseline}
-.fluid-item-name{font-size:11px;font-weight:750;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%}
-.fluid-item-val{font-size:14px;font-weight:850;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.fluid-item-name{font-size:11px;font-weight:750;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%}
+.fluid-item-val{font-size:13px;font-weight:850;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
 .fluid-item-time{font-size:9px;color:var(--muted);text-align:right}
-.progress{height:6px;background:#e9eef3;border-radius:10px;margin:2px 0;overflow:hidden}
-.progress-fill{height:100%;border-radius:10px;background:var(--status);transition:width 0.3s ease}
+.progress{height:5px;background:#e9eef3;border-radius:10px;margin:2px 0;overflow:hidden}
+.progress-fill{height:100%;border-radius:10px;transition:width 0.3s ease}
 
 .room-bottom{display:flex;justify-content:space-between;gap:5px;color:var(--muted);font-size:10px;border-top:1px solid var(--border);padding-top:8px}
 .empty-state{padding:30px 12px;text-align:center;color:var(--muted);grid-column:1/-1}
@@ -176,6 +180,8 @@ tbody tr:hover{background:#f8faff}
   border:1px solid var(--border);border-radius:11px}
 .alert-card.critical{border-left:4px solid var(--red)}
 .alert-card.attention{border-left:4px solid #e0a12a}
+.alert-card.erratic{border-left:4px solid var(--purple)}
+.alert-card.detached{border-left:4px solid var(--red)}
 .alert-card.acknowledged{background:#f8fafc;opacity:.75}
 .alert-symbol{width:35px;height:35px;border-radius:9px;display:grid;
   place-items:center;flex-shrink:0;background:var(--alert-bg);font-size:17px}
@@ -231,20 +237,18 @@ tbody tr:hover{background:#f8faff}
   .page-heading{flex-direction:column; gap:12px}
   h1{font-size:24px}
   
-  .btn{min-height:38px} /* Taller buttons for fat fingers */
+  .btn{min-height:38px}
   .metrics{gap:8px}
   .metric{padding:13px}
   .metric-value{font-size:26px}
   .metric-foot{font-size:10px}
   
-  /* Mobile optimized 1-column layout for rooms (preserves multi-fluid list readability) */
   .floor{grid-template-columns:1fr; gap:12px}
   .room{padding:14px 12px}
   
   .panel-body{padding:14px}
   .panel-head{padding:14px}
   
-  /* Stack toolbars gracefully */
   .toolbar{flex-direction:column; align-items:stretch; gap:8px}
   .search{width:100%; max-width:100%}
   .toolbar select{width:100%}
@@ -259,7 +263,6 @@ tbody tr:hover{background:#f8faff}
   .clock{font-size:10px}
   .demo-pill{font-size:9px;padding:6px}
   
-  /* Mobile Bottom Nav Bar */
   .mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:99;
     background:#fff;border-top:1px solid var(--border);justify-content:space-around;
     padding:8px 4px calc(8px + env(safe-area-inset-bottom)); box-shadow:0 -4px 12px rgba(0,0,0,0.03)}
@@ -268,7 +271,6 @@ tbody tr:hover{background:#f8faff}
   .mobile-nav button span{font-size:20px; line-height:1}
   .mobile-nav button.active{color:var(--blue);font-weight:850}
   
-  /* Settings form stacking */
   .setting-row{flex-direction:column; align-items:flex-start; gap:10px}
   .setting-control{width:100%}
   .setting-control input[type=number], .setting-control select{width:100%; max-width:none}
@@ -313,7 +315,7 @@ tbody tr:hover{background:#f8faff}
       <div class="page-heading">
         <div>
           <h1 id="pageTitle">Infusion overview</h1>
-          <div class="subtitle" id="pageSubtitle">Scan the ward, identify exceptions, and inspect a room.</div>
+          <div class="subtitle" id="pageSubtitle">Central station monitoring for the active floor.</div>
         </div>
         <div class="actions">
           <button class="btn" id="resetBtn">↺ Reset demo</button>
@@ -327,19 +329,25 @@ tbody tr:hover{background:#f8faff}
           <section class="panel">
             <div class="panel-head">
               <div><div class="panel-title">Ward status board</div>
-                <div class="panel-subtitle" id="boardSummary">Select a room to view its demo details.</div></div>
+                <div class="panel-subtitle" id="boardSummary">Select a room to view details.</div></div>
               <div class="legend">
                 <span class="legend-item"><i class="legend-swatch" style="background:var(--green)"></i>Normal</span>
-                <span class="legend-item"><i class="legend-swatch" style="background:#d69a25"></i>Attention</span>
-                <span class="legend-item"><i class="legend-swatch" style="background:var(--red)"></i>Critical</span>
+                <span class="legend-item"><i class="legend-swatch" style="background:#d69a25"></i>Attention / Stagnant</span>
+                <span class="legend-item"><i class="legend-swatch" style="background:var(--purple)"></i>Erratic</span>
+                <span class="legend-item"><i class="legend-swatch" style="background:var(--red)"></i>Critical / Detached</span>
               </div>
             </div>
             <div class="panel-body">
               <div class="toolbar">
-                <input class="search" id="roomSearch" placeholder="Search room, ward, or fluid…" aria-label="Search rooms">
-                <select id="statusFilter" aria-label="Filter by status">
-                  <option value="all">All statuses</option><option value="critical">Critical</option>
-                  <option value="attention">Attention</option><option value="normal">Normal</option>
+                <input class="search" id="roomSearch" placeholder="Search room, ward, fluid…" aria-label="Search rooms">
+                <select id="statusFilter" aria-label="Filter by alert status">
+                  <option value="all">All alert statuses</option>
+                  <option value="critical">Critical (Low Fluid)</option>
+                  <option value="attention">Attention</option>
+                  <option value="stagnant">No Change / Occlusion</option>
+                  <option value="erratic">Erratic Change</option>
+                  <option value="detached">Sensor Detached / Tampered</option>
+                  <option value="normal">Normal</option>
                 </select>
                 <select id="wardFilter" aria-label="Filter by ward">
                   <option value="all">All wards</option><option>Medical</option>
@@ -347,12 +355,12 @@ tbody tr:hover{background:#f8faff}
                 </select>
               </div>
               <div class="floor" id="floor" aria-live="polite"></div>
-              <div class="notice"><strong>Demo only.</strong> All room readings, device states, and time estimates are simulated. Multi-fluid logic is enabled. This board is not connected to medical equipment.</div>
+              <div class="notice"><strong>Advanced Alerts Enabled:</strong> Monitors low fluids, zero progress (occlusions), unstable drop rates, and physical sensor detachment or patient tampering.</div>
             </div>
           </section>
           <section class="panel" id="detailPanel">
             <div class="panel-head"><div><div class="panel-title">Patient details</div>
-              <div class="panel-subtitle">Selected room · simulated parameters</div></div>
+              <div class="panel-subtitle">Selected room · advanced telemetry</div></div>
               <span id="detailStatus" class="status-tag normal">NORMAL</span></div>
             <div class="panel-body" id="roomDetails"></div>
           </section>
@@ -362,10 +370,10 @@ tbody tr:hover{background:#f8faff}
       <section id="directory" class="view">
         <section class="panel">
           <div class="panel-head"><div><div class="panel-title">Room directory</div>
-            <div class="panel-subtitle">Search, sort, and inspect all sample rooms and their active IVs.</div></div>
+            <div class="panel-subtitle">Search, sort, and inspect all sample rooms and their active IV lines.</div></div>
             <input class="search" id="directorySearch" placeholder="Search room, ward, fluid…" aria-label="Search directory"></div>
           <div class="table-wrap"><table>
-            <thead><tr><th>ROOM</th><th>WARD</th><th>ACTIVE INFUSIONS (mL)</th><th>MIN EST. TIME*</th><th>ROOM STATUS</th><th>ACTION</th></tr></thead>
+            <thead><tr><th>ROOM</th><th>WARD</th><th>ACTIVE INFUSIONS (mL)</th><th>MIN EST. TIME*</th><th>STATUS</th><th>ACTION</th></tr></thead>
             <tbody id="directoryRows"></tbody>
           </table></div>
         </section>
@@ -375,7 +383,7 @@ tbody tr:hover{background:#f8faff}
       <section id="alerts" class="view">
         <section class="panel">
           <div class="panel-head"><div><div class="panel-title">Alert center</div>
-            <div class="panel-subtitle">Unresolved demo alerts appear first. Alerts are triggered per individual fluid line.</div></div>
+            <div class="panel-subtitle">Prioritized active alarms across all rooms. Color-coded by exception type.</div></div>
             <button id="ackAll" class="btn">Acknowledge all</button></div>
           <div class="panel-body"><div class="alert-list" id="alertList"></div></div>
         </section>
@@ -385,7 +393,7 @@ tbody tr:hover{background:#f8faff}
         <div class="metrics" id="deviceMetrics"></div>
         <section class="panel">
           <div class="panel-head"><div><div class="panel-title">Device inventory</div>
-            <div class="panel-subtitle">Example connectivity states per individual fluid line, not actual connected equipment.</div></div></div>
+            <div class="panel-subtitle">Hardware integrity and physical sensor state tracking.</div></div></div>
           <div class="panel-body"><div id="deviceGrid" class="device-grid"></div></div>
         </section>
       </section>
@@ -393,26 +401,26 @@ tbody tr:hover{background:#f8faff}
       <section id="settings" class="view">
         <section class="panel">
           <div class="panel-head"><div><div class="panel-title">Demo settings</div>
-            <div class="panel-subtitle">Adjust visual thresholds (in mL) and simulation behavior for presentation.</div></div></div>
+            <div class="panel-subtitle">Configure thresholds and simulation behavior.</div></div></div>
           <div class="panel-body settings-form">
             <div class="setting-row"><div><div class="setting-title">Critical volume threshold</div>
-              <div class="setting-desc">At or below this volume (mL), a fluid level is marked critical.</div></div>
-              <div class="setting-control"><input type="number" id="criticalThreshold" min="1" max="500" value="50" aria-label="Critical threshold"></div></div>
+              <div class="setting-desc">At or below this volume (mL), a fluid level triggers a Critical alert.</div></div>
+              <div class="setting-control"><input type="number" id="criticalThreshold" min="1" max="500" value="50"></div></div>
             <div class="setting-row"><div><div class="setting-title">Attention volume threshold</div>
-              <div class="setting-desc">At or below this volume (mL), a fluid level needs attention.</div></div>
-              <div class="setting-control"><input type="number" id="attentionThreshold" min="10" max="1000" value="100" aria-label="Attention threshold"></div></div>
+              <div class="setting-desc">At or below this volume (mL), triggers an Attention alert.</div></div>
+              <div class="setting-control"><input type="number" id="attentionThreshold" min="10" max="1000" value="100"></div></div>
             <div class="setting-row"><div><div class="setting-title">Automatic demo updates</div>
-              <div class="setting-desc">Randomly decrease some sample fluid levels over time.</div></div>
-              <div class="setting-control"><input type="checkbox" id="autoUpdate" checked aria-label="Automatic demo updates"></div></div>
+              <div class="setting-desc">Simulate normal and abnormal fluid consumption patterns.</div></div>
+              <div class="setting-control"><input type="checkbox" id="autoUpdate" checked></div></div>
             <div class="setting-row"><div><div class="setting-title">Update interval</div>
               <div class="setting-desc">Time between simulated consumption updates.</div></div>
-              <div class="setting-control"><select id="updateInterval" aria-label="Update interval">
+              <div class="setting-control"><select id="updateInterval">
                 <option value="5">5 seconds</option><option value="10" selected>10 seconds</option><option value="30">30 seconds</option></select></div></div>
             <div class="actions" style="padding-top:19px">
               <button class="btn primary" id="saveSettings">Save settings</button>
               <button class="btn" id="pauseBtn">Pause simulation</button>
             </div>
-            <div class="notice"><strong>Prototype limitation:</strong> thresholds and update settings are for demonstration only. Do not use these values as clinical guidance.</div>
+            <div class="notice"><strong>Prototype limitation:</strong> thresholds and update settings are for demonstration only.</div>
           </div>
         </section>
       </section>
@@ -436,46 +444,46 @@ tbody tr:hover{background:#f8faff}
 
 const initialRoomsData = [
   {id:"101", ward:"Medical", fluids:[
-    {fId:"101-1", name:"0.9% NaCl (Saline)", remaining:840, total:1000, rate:80, device:"Connected"},
-    {fId:"101-2", name:"Potassium Chloride", remaining:150, total:200, rate:20, device:"Connected"}
+    {fId:"101-1", name:"0.9% NaCl (Saline)", remaining:840, total:1000, rate:80, device:"Connected", state:"normal", lastRemaining:850},
+    {fId:"101-2", name:"Potassium Chloride", remaining:150, total:200, rate:20, device:"Connected", state:"normal", lastRemaining:150}
   ]},
   {id:"102", ward:"Medical", fluids:[
-    {fId:"102-1", name:"Lactated Ringer's", remaining:620, total:1000, rate:100, device:"Connected"}
+    {fId:"102-1", name:"Lactated Ringer's", remaining:620, total:1000, rate:100, device:"Connected", state:"normal", lastRemaining:620}
   ]},
   {id:"103", ward:"Medical", fluids:[
-    {fId:"103-1", name:"Dextrose 5%", remaining:80, total:500, rate:90, device:"Connected"},
-    {fId:"103-2", name:"Antibiotic (Ceftriaxone)", remaining:25, total:100, rate:100, device:"Connected"}
+    {fId:"103-1", name:"Dextrose 5%", remaining:80, total:500, rate:90, device:"Connected", state:"normal", lastRemaining:85},
+    {fId:"103-2", name:"Antibiotic (Ceftriaxone)", remaining:25, total:100, rate:100, device:"Connected", state:"normal", lastRemaining:30}
   ]},
   {id:"104", ward:"Medical", fluids:[
-    {fId:"104-1", name:"Blood Transfusion (PRBC)", remaining:45, total:350, rate:80, device:"Connected"}
+    {fId:"104-1", name:"Blood Transfusion (PRBC)", remaining:45, total:350, rate:80, device:"Connected", state:"normal", lastRemaining:45}
   ]},
   {id:"105", ward:"Surgical", fluids:[
-    {fId:"105-1", name:"Propofol", remaining:220, total:500, rate:75, device:"Connected"}
+    {fId:"105-1", name:"Propofol", remaining:220, total:500, rate:75, device:"Connected", state:"normal", lastRemaining:220}
   ]},
   {id:"106", ward:"Surgical", fluids:[
-    {fId:"106-1", name:"Lactated Ringer's", remaining:430, total:1000, rate:100, device:"Connected"},
-    {fId:"106-2", name:"Fentanyl", remaining:95, total:100, rate:5, device:"Connected"}
+    {fId:"106-1", name:"Lactated Ringer's", remaining:430, total:1000, rate:100, device:"Connected", state:"stagnant", lastRemaining:430},
+    {fId:"106-2", name:"Fentanyl", remaining:95, total:100, rate:5, device:"Connected", state:"normal", lastRemaining:96}
   ]},
   {id:"107", ward:"Surgical", fluids:[
-    {fId:"107-1", name:"0.9% NaCl (Saline)", remaining:22, total:500, rate:60, device:"Connected"}
+    {fId:"107-1", name:"0.9% NaCl (Saline)", remaining:22, total:500, rate:60, device:"Connected", state:"normal", lastRemaining:25}
   ]},
   {id:"108", ward:"Surgical", fluids:[
-    {fId:"108-1", name:"0.9% NaCl (Saline)", remaining:670, total:1000, rate:80, device:"Offline"}
+    {fId:"108-1", name:"0.9% NaCl (Saline)", remaining:670, total:1000, rate:80, device:"Offline", state:"detached", lastRemaining:670}
   ]},
   {id:"109", ward:"ICU", fluids:[
-    {fId:"109-1", name:"Norepinephrine", remaining:12, total:250, rate:15, device:"Connected"},
-    {fId:"109-2", name:"Vasopressin", remaining:80, total:100, rate:10, device:"Connected"},
-    {fId:"109-3", name:"Lactated Ringer's", remaining:950, total:1000, rate:120, device:"Connected"}
+    {fId:"109-1", name:"Norepinephrine", remaining:12, total:250, rate:15, device:"Connected", state:"erratic", lastRemaining:150},
+    {fId:"109-2", name:"Vasopressin", remaining:80, total:100, rate:10, device:"Connected", state:"normal", lastRemaining:85},
+    {fId:"109-3", name:"Lactated Ringer's", remaining:950, total:1000, rate:120, device:"Connected", state:"normal", lastRemaining:960}
   ]},
   {id:"110", ward:"ICU", fluids:[
-    {fId:"110-1", name:"Amiodarone", remaining:150, total:500, rate:30, device:"Connected"}
+    {fId:"110-1", name:"Amiodarone", remaining:150, total:500, rate:30, device:"Connected", state:"normal", lastRemaining:155}
   ]},
   {id:"111", ward:"ICU", fluids:[
-    {fId:"111-1", name:"Heparin", remaining:350, total:500, rate:25, device:"Connected"}
+    {fId:"111-1", name:"Heparin", remaining:350, total:500, rate:25, device:"Connected", state:"normal", lastRemaining:355}
   ]},
   {id:"112", ward:"ICU", fluids:[
-    {fId:"112-1", name:"Insulin", remaining:45, total:100, rate:5, device:"Connected"},
-    {fId:"112-2", name:"Dextrose 10%", remaining:30, total:500, rate:40, device:"Connected"}
+    {fId:"112-1", name:"Insulin", remaining:45, total:100, rate:5, device:"Connected", state:"normal", lastRemaining:48},
+    {fId:"112-2", name:"Dextrose 10%", remaining:30, total:500, rate:40, device:"Offline", state:"detached", lastRemaining:30}
   ]}
 ];
 
@@ -483,8 +491,8 @@ const $ = id => document.getElementById(id);
 let rooms = cloneInitial();
 let selectedId = "103";
 let acknowledged = new Set();
-let criticalThreshold = 50; // mL
-let attentionThreshold = 100; // mL
+let criticalThreshold = 50; 
+let attentionThreshold = 100; 
 let autoUpdate = true;
 let intervalSeconds = 10;
 let timer = null;
@@ -498,22 +506,41 @@ function cloneInitial(){
   }));
 }
 
-function fluidStatus(fluid) {
-  if(fluid.device === "Offline") return {key:"critical", label:"OFFLINE", color:"var(--red)", bg:"var(--red-bg)"};
-  if(fluid.remaining <= criticalThreshold) return {key:"critical", label:"CRITICAL", color:"var(--red)", bg:"var(--red-bg)"};
-  if(fluid.remaining <= attentionThreshold) return {key:"attention", label:"ATTENTION", color:"#d69a25", bg:"var(--amber-bg)"};
-  return {key:"normal", label:"NORMAL", color:"var(--green)", bg:"var(--green-bg)"};
+function getFluidAlertState(fluid) {
+  if (fluid.device === "Offline" || fluid.state === "detached") {
+    return { key: "detached", label: "SENSOR DETACHED", color: "var(--red)", bg: "var(--red-bg)" };
+  }
+  if (fluid.state === "erratic") {
+    return { key: "erratic", label: "ERRATIC CHANGE", color: "var(--purple)", bg: "var(--purple-bg)" };
+  }
+  if (fluid.state === "stagnant") {
+    return { key: "stagnant", label: "NO CHANGE / OCCLUSION", color: "#d69a25", bg: "var(--amber-bg)" };
+  }
+  if (fluid.remaining <= criticalThreshold) {
+    return { key: "critical", label: "CRITICAL (LOW)", color: "var(--red)", bg: "var(--red-bg)" };
+  }
+  if (fluid.remaining <= attentionThreshold) {
+    return { key: "attention", label: "ATTENTION", color: "#d69a25", bg: "var(--amber-bg)" };
+  }
+  return { key: "normal", label: "NORMAL", color: "var(--green)", bg: "var(--green-bg)" };
 }
 
 function roomStatus(room) {
-  let hasCrit = false, hasAtt = false;
+  let priorities = { detached: 0, critical: 1, erratic: 2, stagnant: 3, attention: 4, normal: 5 };
+  let worstKey = "normal";
+  let worstScore = 5;
+
   for(let f of room.fluids) {
-    const s = fluidStatus(f).key;
-    if(s === "critical") hasCrit = true;
-    if(s === "attention") hasAtt = true;
+    const s = getFluidAlertState(f);
+    if(priorities[s.key] < worstScore) {
+      worstScore = priorities[s.key];
+      worstKey = s.key;
+    }
   }
-  if(hasCrit) return {key:"critical", label:"CRITICAL", color:"var(--red)", bg:"var(--red-bg)"};
-  if(hasAtt) return {key:"attention", label:"ATTENTION", color:"#d69a25", bg:"var(--amber-bg)"};
+
+  if(worstKey === "detached" || worstKey === "critical") return {key:"critical", label:"CRITICAL", color:"var(--red)", bg:"var(--red-bg)"};
+  if(worstKey === "erratic") return {key:"erratic", label:"ERRATIC", color:"var(--purple)", bg:"var(--purple-bg)"};
+  if(worstKey === "stagnant" || worstKey === "attention") return {key:"attention", label:"ATTENTION", color:"#d69a25", bg:"var(--amber-bg)"};
   return {key:"normal", label:"NORMAL", color:"var(--green)", bg:"var(--green-bg)"};
 }
 
@@ -541,18 +568,20 @@ function updateClock(){
 
 function renderMetrics(){
   const normal = rooms.filter(r => roomStatus(r).key === "normal").length;
-  const attention = rooms.filter(r => roomStatus(r).key === "attention").length;
+  const attention = rooms.filter(r => roomStatus(r).key === "attention" || roomStatus(r).key === "erratic").length;
   const critical = rooms.filter(r => roomStatus(r).key === "critical").length;
   
   const allFluids = rooms.flatMap(r => r.fluids);
-  const onlineCount = allFluids.filter(f => f.device === "Connected").length;
-  const offlineCount = allFluids.length - onlineCount;
+  let alertCountTotal = 0;
+  allFluids.forEach(f => {
+    if(getFluidAlertState(f).key !== "normal" && !acknowledged.has(f.fId)) alertCountTotal++;
+  });
 
   const cards = [
-    ["Monitored patients", rooms.length, "Across 3 sample wards", "neutral"],
+    ["Monitored patients", rooms.length, "Central Floor Board", "neutral"],
     ["Normal status", normal, `${Math.round(normal/rooms.length*100)}% of patients`, "good"],
-    ["Needs review", attention + critical, `${critical} critical · ${attention} attention`, "urgent"],
-    ["Active sensors", onlineCount, `${offlineCount} offline`, "caution"]
+    ["Active alerts", alertCountTotal, `${critical} critical/detached · ${attention} warnings`, "urgent"],
+    ["Connected sensors", allFluids.filter(f=>f.device==="Connected" && f.state!=="detached").length, "Active telemetry", "caution"]
   ];
   $("metrics").innerHTML = cards.map(c => `
     <article class="metric ${c[3]}">
@@ -560,26 +589,37 @@ function renderMetrics(){
       <div class="metric-foot">${c[2]}</div>
     </article>`).join("");
   
-  let unackedAlerts = 0;
-  rooms.forEach(r => r.fluids.forEach(f => {
-    if(fluidStatus(f).key !== "normal" && !acknowledged.has(f.fId)) unackedAlerts++;
-  }));
-  
-  $("alertCount").textContent = unackedAlerts;
+  $("alertCount").textContent = alertCountTotal;
   $("boardSummary").textContent = `${rooms.length} sample rooms · Updated ${lastUpdated.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"})}`;
 }
 
 function filteredRooms(){
   const query = $("roomSearch").value.toLowerCase().trim();
-  const status = $("statusFilter").value;
+  const statusFilter = $("statusFilter").value;
   const ward = $("wardFilter").value;
+
   return rooms.filter(r => {
     const fNames = r.fluids.map(f => f.name).join(" ");
-    return (`${r.id} ${r.ward} ${fNames}`.toLowerCase().includes(query)) &&
-           (status === "all" || roomStatus(r).key === status) &&
-           (ward === "all" || r.ward === ward);
+    const matchesQuery = `${r.id} ${r.ward} ${fNames}`.toLowerCase().includes(query);
+    const matchesWard = (ward === "all" || r.ward === ward);
+
+    let matchesStatus = true;
+    if(statusFilter !== "all") {
+      matchesStatus = r.fluids.some(f => {
+        const st = getFluidAlertState(f).key;
+        if(statusFilter === "critical") return st === "critical";
+        if(statusFilter === "attention") return st === "attention";
+        if(statusFilter === "stagnant") return st === "stagnant";
+        if(statusFilter === "erratic") return st === "erratic";
+        if(statusFilter === "detached") return st === "detached";
+        if(statusFilter === "normal") return st === "normal";
+        return true;
+      });
+    }
+
+    return matchesQuery && matchesWard && matchesStatus;
   }).sort((a,b) => {
-    const priority = {critical:0, attention:1, normal:2};
+    const priority = {detached:0, critical:1, erratic:2, stagnant:3, attention:4, normal:5};
     return priority[roomStatus(a).key] - priority[roomStatus(b).key] || a.id.localeCompare(b.id);
   });
 }
@@ -596,10 +636,10 @@ function renderFloor(){
       
       <div class="fluids-list">
         ${r.fluids.map(f => {
-          const fs = fluidStatus(f);
+          const fs = getFluidAlertState(f);
           const pct = Math.max(0, Math.min(100, (f.remaining / f.total) * 100));
           return `
-            <div class="fluid-item">
+            <div class="fluid-item" style="border-left: 3px solid ${fs.color}">
               <div class="fluid-item-head">
                 <span class="fluid-item-name" title="${f.name}">${f.name}</span>
                 <span class="fluid-item-val" style="color:${fs.color}">${Math.round(f.remaining)} <span style="font-size:10px; font-weight:600; color:var(--muted)">mL</span></span>
@@ -607,7 +647,10 @@ function renderFloor(){
               <div class="progress">
                 <div class="progress-fill" style="width:${pct}%; background:${fs.color}"></div>
               </div>
-              <div class="fluid-item-time">${timeText(remainingMinutes(f))} left</div>
+              <div style="display:flex; justify-content:space-between; align-items:center">
+                <span style="font-size:8px; font-weight:800; color:${fs.color}">${fs.label}</span>
+                <span class="fluid-item-time">${timeText(remainingMinutes(f))} left</span>
+              </div>
             </div>`;
         }).join("")}
       </div>
@@ -621,8 +664,6 @@ window.selectRoom = function(id){
   selectedId = id;
   renderFloor();
   renderDetails();
-  
-  // Mobile optimization: Auto-scroll to the details panel when a room is selected
   if(window.innerWidth <= 1200) {
     setTimeout(() => {
       $("detailPanel").scrollIntoView({behavior: "smooth", block: "start"});
@@ -639,7 +680,9 @@ window.handleAdjust = function(rId, fId){
   if(!Number.isFinite(num) || num < 0 || num > f.total){
     notify(`Enter a valid number between 0 and ${f.total}.`); return;
   }
+  f.lastRemaining = f.remaining;
   f.remaining = num;
+  f.state = "normal";
   acknowledged.delete(fId);
   touchData(); renderAll();
   notify(`Updated ${f.name} to ${Math.round(num)} mL.`);
@@ -648,10 +691,16 @@ window.handleAdjust = function(rId, fId){
 window.handleToggleDevice = function(rId, fId){
   const r = rooms.find(x => x.id === rId);
   const f = r.fluids.find(x => x.fId === fId);
-  f.device = f.device === "Connected" ? "Offline" : "Connected";
+  if(f.device === "Connected") {
+    f.device = "Offline";
+    f.state = "detached";
+  } else {
+    f.device = "Connected";
+    f.state = "normal";
+  }
   acknowledged.delete(fId);
   touchData(); renderAll();
-  notify(`${f.name} sensor is now ${f.device}.`);
+  notify(`${f.name} status updated.`);
 };
 
 window.handleAck = function(fId){
@@ -670,19 +719,20 @@ function renderDetails(){
   $("detailStatus").textContent = rs.label;
   
   const cardsHtml = r.fluids.map(f => {
-    const fs = fluidStatus(f);
+    const fs = getFluidAlertState(f);
     const pct = Math.max(0, Math.min(100, (f.remaining / f.total) * 100));
     
     let bgStyle = "background:linear-gradient(130deg,#123047,#20566b);";
-    if(fs.key === "critical") bgStyle = "background:linear-gradient(130deg,#8b1b24,#5c0c14);";
-    else if(fs.key === "attention") bgStyle = "background:linear-gradient(130deg,#8c5700,#5c3800);";
+    if(fs.key === "critical" || fs.key === "detached") bgStyle = "background:linear-gradient(130deg,#8b1b24,#5c0c14);";
+    else if(fs.key === "attention" || fs.key === "stagnant") bgStyle = "background:linear-gradient(130deg,#8c5700,#5c3800);";
+    else if(fs.key === "erratic") bgStyle = "background:linear-gradient(130deg,#5b21b6,#3b0764);";
 
     return `
     <div class="detail-hero" style="${bgStyle}">
       <div class="detail-hero-top">
         <div>
           <div class="detail-room">${f.name}</div>
-          <div class="detail-type">Total capacity: ${f.total} mL</div>
+          <div class="detail-type">Total capacity: ${f.total} mL · Line ID: ${f.fId}</div>
         </div>
         <span class="status-tag ${fs.key}">${fs.label}</span>
       </div>
@@ -691,7 +741,7 @@ function renderDetails(){
         <div style="width:${pct}%;background:${fs.key==='normal'?'#61d7ae':'#fff'}"></div>
       </div>
       <div class="detail-remaining">
-        <span>Illustrative time estimate*</span>
+        <span>Est. Time to Empty*</span>
         <strong>${timeText(remainingMinutes(f))}</strong>
       </div>
       
@@ -701,29 +751,29 @@ function renderDetails(){
           <div class="detail-stat-value">${f.rate} mL/h</div>
         </div>
         <div class="detail-stat" style="background:#ffffff15; border:none; color:#fff;">
-          <div class="detail-stat-label" style="color:#c5d9e4">DEVICE STATUS</div>
-          <div class="detail-stat-value" style="color:${f.device==='Connected'?'#61d7ae':'#ffa7b0'}">${f.device}</div>
+          <div class="detail-stat-label" style="color:#c5d9e4">SENSOR / TELEMETRY</div>
+          <div class="detail-stat-value" style="color:${f.device==='Connected'&&f.state!=='detached'?'#61d7ae':'#ffa7b0'}">${f.state==='detached'||f.device==='Offline'?'Detached / Offline':f.device}</div>
         </div>
       </div>
       
       <div class="detail-actions">
         <button class="btn small" style="color:var(--navy); background:#fff; border:none" onclick="window.handleAdjust('${r.id}','${f.fId}')">Edit volume</button>
-        <button class="btn small" style="color:#fff; background:rgba(255,255,255,0.2); border:none" onclick="window.handleToggleDevice('${r.id}','${f.fId}')">${f.device==="Connected"?"Simulate offline":"Simulate reconnect"}</button>
-        ${fs.key !== 'normal' ? `<button class="btn small" style="color:#fff; background:rgba(255,255,255,0.2); border:none" onclick="window.handleAck('${f.fId}')">${acknowledged.has(f.fId)?"Unacknowledge alert":"Acknowledge alert"}</button>` : ''}
+        <button class="btn small" style="color:#fff; background:rgba(255,255,255,0.2); border:none" onclick="window.handleToggleDevice('${r.id}','${f.fId}')">${f.device==="Connected"&&f.state!=="detached"?"Simulate sensor detach":"Simulate reconnect"}</button>
+        ${fs.key !== 'normal' ? `<button class="btn small" style="color:#fff; background:rgba(255,255,255,0.2); border:none" onclick="window.handleAck('${f.fId}')">${acknowledged.has(f.fId)?"Unacknowledge":"Acknowledge"}</button>` : ''}
       </div>
     </div>`;
   }).join("");
 
   $("roomDetails").innerHTML = `
     <div style="margin-bottom:15px; font-size:13px; font-weight:800; color:var(--text)">
-      Room ${r.id} · ${r.ward} Ward · ${r.fluids.length} active infusion${r.fluids.length!==1?'s':''}
+      Room ${r.id} · ${r.ward} Ward · ${r.fluids.length} active infusion line${r.fluids.length!==1?'s':''}
     </div>
     ${cardsHtml}
     <div class="event" style="margin-top:10px"><div class="event-icon">◷</div><div>
-      <div class="event-title">Last simulated update</div>
-      <div class="event-sub">${lastUpdated.toLocaleTimeString()}</div>
+      <div class="event-title">Last telemetry pulse</div>
+      <div class="event-sub">${lastUpdated.toLocaleTimeString()} · Continuous monitoring active</div>
     </div></div>
-    <div class="notice"><strong>Not for clinical use.</strong> The displayed time is a simplified demonstration calculation, not a prediction of when an actual infusion will empty.</div>
+    <div class="notice"><strong>Clinical protocol:</strong> Check line for kinking or patient tampering if Occlusion or Erratic alerts activate.</div>
   `;
 }
 
@@ -733,7 +783,7 @@ function renderDirectory(){
     const fNames = r.fluids.map(f => f.name).join(" ");
     return `${r.id} ${r.ward} ${fNames}`.toLowerCase().includes(query);
   }).sort((a,b) => {
-    const priority = {critical:0, attention:1, normal:2};
+    const priority = {detached:0, critical:1, erratic:2, stagnant:3, attention:4, normal:5};
     return priority[roomStatus(a).key] - priority[roomStatus(b).key] || a.id.localeCompare(b.id);
   });
   
@@ -742,10 +792,10 @@ function renderDirectory(){
     const minTime = Math.min(...r.fluids.map(remainingMinutes));
     
     const fluidsHtml = r.fluids.map(f => {
-      const fs = fluidStatus(f);
-      return `<div style="margin-bottom:5px; line-height:1.2;">
+      const fs = getFluidAlertState(f);
+      return `<div style="margin-bottom:6px; line-height:1.3;">
         <span style="font-weight:750">${f.name}</span>: ${Math.round(f.remaining)}mL 
-        <span class="status-tag ${fs.key}" style="font-size:8px; padding:2px 4px; margin-left:4px">${fs.label}</span>
+        <span class="status-tag ${fs.key}" style="font-size:8px; padding:2px 5px; margin-left:4px">${fs.label}</span>
       </div>`;
     }).join("");
 
@@ -764,58 +814,61 @@ function renderAlerts(){
   const alerts = [];
   rooms.forEach(r => {
     r.fluids.forEach(f => {
-      const s = fluidStatus(f);
+      const s = getFluidAlertState(f);
       if(s.key !== "normal") alerts.push({ room: r, fluid: f, s: s });
     });
   });
 
+  const priorityOrder = { detached:0, critical:1, erratic:2, stagnant:3, attention:4 };
   alerts.sort((a,b) => {
     const aa = acknowledged.has(a.fluid.fId) ? 1 : 0;
     const bb = acknowledged.has(b.fluid.fId) ? 1 : 0;
-    return aa - bb || ({critical:0,attention:1}[a.s.key] - {critical:0,attention:1}[b.s.key]) || a.room.id.localeCompare(b.room.id);
+    return aa - bb || (priorityOrder[a.s.key] - priorityOrder[b.s.key]) || a.room.id.localeCompare(b.room.id);
   });
 
   $("alertList").innerHTML = alerts.length ? alerts.map(alert => {
     const {room, fluid, s} = alert;
     const done = acknowledged.has(fluid.fId);
-    const deviceOnly = fluid.device === "Offline" && fluid.remaining > attentionThreshold;
-    const reason = deviceOnly ? "Sensor disconnected" : 
-                   fluid.device === "Offline" ? "Sensor disconnected & fluid low" : 
-                   fluid.remaining <= criticalThreshold ? `Fluid critical (≤ ${criticalThreshold} mL)` : 
-                   `Fluid attention (≤ ${attentionThreshold} mL)`;
+    
+    let desc = `Ward: ${room.ward} · Level: ${Math.round(fluid.remaining)} / ${fluid.total} mL`;
+    if(s.key === "detached") desc = `Physical sensor detached or tampered by patient in Room ${room.id}.`;
+    else if(s.key === "erratic") desc = `Unstable flow or sudden abnormal volume shift detected.`;
+    else if(s.key === "stagnant") desc = `Possible line occlusion or clamp closed (Zero fluid movement).`;
     
     return `<article class="alert-card ${s.key} ${done?"acknowledged":""}">
-      <div class="alert-symbol" style="--alert-bg:${s.bg}">${s.key==="critical"?"!":"◷"}</div>
-      <div class="alert-content"><div class="alert-title">Room ${room.id} · ${fluid.name} · ${reason}${done?" · ACKNOWLEDGED":""}</div>
-        <div class="alert-description">${room.ward} ward · Current volume: ${Math.round(fluid.remaining)} / ${fluid.total} mL · Est time: ${timeText(remainingMinutes(fluid))}.</div></div>
+      <div class="alert-symbol" style="--alert-bg:${s.bg}; color:${s.color}">${s.key==="critical"||s.key==="detached"?"!":s.key==="erratic"?"⚡":"⚠"}</div>
+      <div class="alert-content"><div class="alert-title">Room ${room.id} · ${fluid.name} · <span style="color:${s.color}">${s.label}</span>${done?" · ACKNOWLEDGED":""}</div>
+        <div class="alert-description">${desc}</div></div>
       <div class="alert-actions">
         <button class="btn small" onclick="window.handleAck('${fluid.fId}')">${done?"Unacknowledge":"Acknowledge"}</button>
         <button class="btn small" onclick="window.selectRoom('${room.id}'); window.showView('overview');">Inspect</button>
       </div>
     </article>`;
-  }).join("") : '<div class="empty-state">No active demo alerts. This does not indicate the status of any real patient or device.</div>';
+  }).join("") : '<div class="empty-state">No active exceptions. All infusion lines operating normally.</div>';
 }
 
 function renderDevices(){
   const allFluids = rooms.flatMap(r => r.fluids.map(f => ({room: r, fluid: f})));
-  const online = allFluids.filter(x => x.fluid.device === "Connected").length;
+  const online = allFluids.filter(x => x.fluid.device === "Connected" && x.fluid.state !== "detached").length;
   
   $("deviceMetrics").innerHTML = [
     ["Registered IV sensors", allFluids.length],
-    ["Connected", online],
-    ["Offline", allFluids.length - online],
-    ["Connectivity", `${allFluids.length ? Math.round(online/allFluids.length*100) : 0}%`]
+    ["Active & Attached", online],
+    ["Detached / Offline", allFluids.length - online],
+    ["Hardware Health", `${allFluids.length ? Math.round(online/allFluids.length*100) : 0}%`]
   ].map((c,i) => `<article class="metric ${i===1?"good":i===2?"urgent":"neutral"}">
     <div class="metric-label">${c[0]}</div><div class="metric-value">${c[1]}</div>
-    <div class="metric-foot">Illustrative inventory only</div></article>`).join("");
+    <div class="metric-foot">Physical sensor telemetry</div></article>`).join("");
   
-  $("deviceGrid").innerHTML = allFluids.map(d => `
-    <article class="device-card"><div class="device-top"><div>
-      <div class="device-name">${d.fluid.name} sensor</div><div class="device-id">RM${d.room.id}-${d.fluid.fId}</div></div>
+  $("deviceGrid").innerHTML = allFluids.map(d => {
+    const isDetached = d.fluid.device === "Offline" || d.fluid.state === "detached";
+    return `<article class="device-card"><div class="device-top"><div>
+      <div class="device-name">${d.fluid.name}</div><div class="device-id">RM${d.room.id} - Line ${d.fluid.fId}</div></div>
       <span aria-hidden="true" style="font-size:23px; color:var(--muted)">⌁</span></div>
-      <div class="device-state" style="color:${d.fluid.device==="Connected"?"var(--green)":"var(--red)"}">● ${d.fluid.device}</div>
-      <div class="event-sub">Room ${d.room.id} (${d.room.ward}) · ${Math.round(d.fluid.remaining)} mL remaining</div>
-      <button class="btn small" style="margin-top:13px" onclick="window.handleToggleDevice('${d.room.id}','${d.fluid.fId}')">${d.fluid.device==="Connected"?"Simulate disconnect":"Simulate reconnect"}</button></article>`).join("");
+      <div class="device-state" style="color:${isDetached?"var(--red)":"var(--green)"}">● ${isDetached ? "Detached / Offline" : "Securely Attached"}</div>
+      <div class="event-sub">Room ${d.room.id} (${d.room.ward}) · Vol: ${Math.round(d.fluid.remaining)} mL</div>
+      <button class="btn small" style="margin-top:13px" onclick="window.handleToggleDevice('${d.room.id}','${d.fluid.fId}')">${isDetached?"Simulate reattach":"Simulate detach"}</button></article>`;
+  }).join("");
 }
 
 function renderAll(){
@@ -833,9 +886,9 @@ window.showView = function(view){
   const titles = {
     overview: ["Infusion overview", "Scan the ward, identify exceptions, and inspect a room."],
     directory: ["Room directory", "Find a room and inspect its active infusions."],
-    alerts: ["Alert center", "Review and acknowledge simulated exceptions."],
-    devices: ["Device inventory", "Inspect simulated sensor connectivity per fluid line."],
-    settings: ["Demo settings", "Configure the prototype's display and simulation."]
+    alerts: ["Alert center", "Review and acknowledge advanced system alerts."],
+    devices: ["Device inventory", "Inspect physical sensor attachment and hardware."],
+    settings: ["Demo settings", "Configure prototype display and simulation."]
   };
   $("breadcrumb").textContent = titles[view][0];
   $("pageTitle").textContent = titles[view][0];
@@ -848,9 +901,24 @@ function touchData(){ lastUpdated = new Date(); }
 function simulateUpdate(){
   rooms.forEach(r => {
     r.fluids.forEach(f => {
-      // Simulate random small mL drops to simulate active infusion
-      if(Math.random() < 0.8 && f.remaining > 0) {
-        f.remaining = Math.max(0, f.remaining - (Math.random() * 3 + 0.5));
+      if(f.device === "Offline" || f.state === "detached") return;
+      
+      f.lastRemaining = f.remaining;
+      const rand = Math.random();
+
+      if(rand < 0.1) {
+        // Stagnant / No change (Occlusion)
+        f.state = "stagnant";
+      } else if(rand < 0.18) {
+        // Erratic change (sudden drop or jump)
+        f.state = "erratic";
+        f.remaining = Math.max(0, f.remaining - (Math.random() * 40 + 20));
+      } else {
+        // Normal consumption
+        if(f.state === "stagnant" || f.state === "erratic") f.state = "normal";
+        if(f.remaining > 0) {
+          f.remaining = Math.max(0, f.remaining - (Math.random() * 3 + 0.5));
+        }
       }
     });
   });
@@ -859,7 +927,7 @@ function simulateUpdate(){
 
 $("updateBtn").addEventListener("click", () => {
   simulateUpdate();
-  notify("Sample readings updated. No equipment was contacted.");
+  notify("Telemetry synchronized across ward.");
 });
 
 function resetDemo(){
@@ -888,25 +956,25 @@ $("resetBtn").addEventListener("click", resetDemo);
 $("ackAll").addEventListener("click", () => {
   rooms.forEach(r => {
     r.fluids.forEach(f => {
-      if(fluidStatus(f).key !== "normal") acknowledged.add(f.fId);
+      if(getFluidAlertState(f).key !== "normal") acknowledged.add(f.fId);
     });
   });
-  renderAll(); notify("All active demo alerts acknowledged.");
+  renderAll(); notify("All active alerts acknowledged.");
 });
 
 $("saveSettings").addEventListener("click", () => {
   const c = Number($("criticalThreshold").value), a = Number($("attentionThreshold").value);
   if(!Number.isInteger(c) || !Number.isInteger(a) || c < 1 || c > 500 || a <= c || a > 1000){
-    notify("Use a critical threshold of 1–500 mL and an attention threshold above it, up to 1000 mL."); return;
+    notify("Use valid critical (1–500) and attention thresholds."); return;
   }
   criticalThreshold = c; attentionThreshold = a; autoUpdate = $("autoUpdate").checked;
   intervalSeconds = Number($("updateInterval").value);
-  configureTimer(); renderAll(); notify("Demo settings saved for this session.");
+  configureTimer(); renderAll(); notify("Settings saved.");
 });
 
 $("pauseBtn").addEventListener("click", () => {
   autoUpdate = !autoUpdate; $("autoUpdate").checked = autoUpdate;
-  configureTimer(); notify(autoUpdate ? "Demo simulation resumed." : "Demo simulation paused.");
+  configureTimer(); notify(autoUpdate ? "Simulation resumed." : "Simulation paused.");
 });
 
 $("autoUpdate").addEventListener("change", () => {
