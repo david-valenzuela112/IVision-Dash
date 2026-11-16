@@ -59,6 +59,14 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .demo-indicator{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:6px}
 .dot{width:8px;height:8px;display:inline-block;border-radius:50%;background:#61d7ae}
 .main{min-width:0}
+
+/* Top Live Emergency Notification Bar */
+.live-banner{background:linear-gradient(90deg, #991b1b, #b91c1c);color:#fff;padding:10px 24px;
+  font-size:12px;font-weight:700;display:none;align-items:center;justify-content:between;gap:12px;animation:pulseBanner 2s infinite}
+.live-banner.active{display:flex}
+.live-banner-content{display:flex;align-items:center;gap:8px;flex:1}
+@keyframes pulseBanner{0%{opacity:0.95}50%{opacity:1}100%{opacity:0.95}}
+
 .topbar{background:#fff;border-bottom:1px solid var(--border);
   padding:14px 28px;min-height:67px;display:flex;align-items:center;
   justify-content:space-between;gap:14px}
@@ -131,7 +139,6 @@ input::placeholder{color:#8493a2}
 .status-tag.detached{color:var(--red);background:var(--red-bg)}
 .status-tag.neutral{color:#526477;background:#edf1f5}
 
-/* Fluids mini-bars inside room card */
 .fluids-list{display:flex;flex-direction:column;gap:10px;margin-top:6px;width:100%}
 .fluid-item{display:flex;flex-direction:column;gap:3px;padding:6px;background:#f8fafc;border-radius:6px;border:1px solid var(--border)}
 .fluid-item-head{display:flex;justify-content:space-between;align-items:baseline}
@@ -204,15 +211,21 @@ tbody tr:hover{background:#f8faff}
 .setting-control input[type=number]{width:90px}
 .setting-control input[type=checkbox]{width:22px;height:22px;accent-color:var(--blue)}
 .footer{text-align:center;color:#82909d;font-size:10px;padding:25px 0 0}
-.toast{position:fixed;right:20px;bottom:20px;z-index:10;max-width:min(400px,calc(100vw - 40px));
-  background:var(--navy);color:#fff;padding:13px 17px;border-radius:10px;
-  box-shadow:var(--shadow);opacity:0;transform:translateY(8px);pointer-events:none;
-  transition:.2s;font-size:12px}
-.toast.show{opacity:1;transform:translateY(0)}
+
+/* Floating Real-time Toast Popups */
+.toast-container{position:fixed;right:20px;bottom:20px;z-index:999;display:flex;flex-direction:column;gap:10px;max-width:min(380px,calc(100vw - 40px));pointer-events:none}
+.toast-alert{background:var(--navy);color:#fff;padding:14px 16px;border-radius:11px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.2);display:flex;align-items:flex-start;gap:12px;
+  opacity:0;transform:translateY(16px);transition:all .25s ease;pointer-events:auto;border-left:4px solid var(--red)}
+.toast-alert.show{opacity:1;transform:translateY(0)}
+.toast-icon{font-size:18px;flex-shrink:0}
+.toast-body{flex:1;min-width:0}
+.toast-title{font-weight:850;font-size:12px}
+.toast-text{font-size:11px;color:#cbd5e1;margin-top:3px}
+
 .mobile-nav{display:none}
 @keyframes appear{from{opacity:.6;transform:translateY(3px)}to{opacity:1;transform:none}}
 
-/* Responsiveness starts here */
 @media(max-width:1200px){
   .layout{grid-template-columns:1fr}
   .floor{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -236,33 +249,26 @@ tbody tr:hover{background:#f8faff}
   .content{padding:19px 12px}
   .page-heading{flex-direction:column; gap:12px}
   h1{font-size:24px}
-  
   .btn{min-height:38px}
   .metrics{gap:8px}
   .metric{padding:13px}
   .metric-value{font-size:26px}
   .metric-foot{font-size:10px}
-  
   .floor{grid-template-columns:1fr; gap:12px}
   .room{padding:14px 12px}
-  
   .panel-body{padding:14px}
   .panel-head{padding:14px}
-  
   .toolbar{flex-direction:column; align-items:stretch; gap:8px}
   .search{width:100%; max-width:100%}
   .toolbar select{width:100%}
-  
   .device-grid{grid-template-columns:1fr}
   .alert-card{flex-wrap:wrap}
   .alert-content{flex-basis:calc(100% - 55px)}
   .alert-actions{margin-left:46px; width:100%; margin-top:4px}
-  
   .detail-value{font-size:32px}
   .top-right{gap:7px}
   .clock{font-size:10px}
   .demo-pill{font-size:9px;padding:6px}
-  
   .mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:99;
     background:#fff;border-top:1px solid var(--border);justify-content:space-around;
     padding:8px 4px calc(8px + env(safe-area-inset-bottom)); box-shadow:0 -4px 12px rgba(0,0,0,0.03)}
@@ -270,14 +276,9 @@ tbody tr:hover{background:#f8faff}
     display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px; flex:1}
   .mobile-nav button span{font-size:20px; line-height:1}
   .mobile-nav button.active{color:var(--blue);font-weight:850}
-  
   .setting-row{flex-direction:column; align-items:flex-start; gap:10px}
   .setting-control{width:100%}
   .setting-control input[type=number], .setting-control select{width:100%; max-width:none}
-}
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;
-  scroll-behavior:auto!important}
 }
 </style>
 </head>
@@ -303,6 +304,14 @@ tbody tr:hover{background:#f8faff}
   </aside>
 
   <main class="main">
+    <!-- Top Live Banner for Urgent Alerts -->
+    <div id="liveBanner" class="live-banner" role="alert">
+      <div class="live-banner-content">
+        <span>🚨</span> <strong id="bannerText">CRITICAL EXCEPTION DETECTED:</strong>
+      </div>
+      <button class="btn small" style="background:#fff; color:#991b1b; border:none; font-weight:800;" onclick="window.showView('alerts')">View Alert Center</button>
+    </div>
+
     <header class="topbar">
       <div class="breadcrumb">Hospital / <strong id="breadcrumb">Overview</strong></div>
       <div class="top-right">
@@ -355,7 +364,7 @@ tbody tr:hover{background:#f8faff}
                 </select>
               </div>
               <div class="floor" id="floor" aria-live="polite"></div>
-              <div class="notice"><strong>Advanced Alerts Enabled:</strong> Monitors low fluids, zero progress (occlusions), unstable drop rates, and physical sensor detachment or patient tampering.</div>
+              <div class="notice"><strong>Active Notifications:</strong> Real-time popups and top banners alert staff immediately to critical fluid drops, occlusions, or detached sensors.</div>
             </div>
           </section>
           <section class="panel" id="detailPanel">
@@ -437,7 +446,9 @@ tbody tr:hover{background:#f8faff}
   <button data-view="devices"><span>▣</span>Devices</button>
   <button data-view="settings"><span>⚙</span>Settings</button>
 </nav>
-<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<!-- Live Toast Popup Container -->
+<div id="toastContainer" class="toast-container" aria-live="polite"></div>
 
 <script>
 "use strict";
@@ -491,12 +502,12 @@ const $ = id => document.getElementById(id);
 let rooms = cloneInitial();
 let selectedId = "103";
 let acknowledged = new Set();
+let seenAlerts = new Set(); // Tracks what has already popped up as a notification
 let criticalThreshold = 50; 
 let attentionThreshold = 100; 
 let autoUpdate = true;
 let intervalSeconds = 10;
 let timer = null;
-let toastTimer = null;
 let currentView = "overview";
 let lastUpdated = new Date();
 
@@ -555,11 +566,59 @@ function timeText(minutes){
   return `${Math.floor(minutes/60)}h ${minutes%60}m`;
 }
 
-function notify(message){
-  $("toast").textContent = message;
-  $("toast").classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => $("toast").classList.remove("show"), 2600);
+function showPopupNotification(room, fluid, state) {
+  const container = $("toastContainer");
+  const toast = document.createElement("div");
+  toast.className = "toast-alert show";
+  
+  let borderColor = state.key === 'critical' || state.key === 'detached' ? 'var(--red)' : state.key === 'erratic' ? 'var(--purple)' : '#d69a25';
+  toast.style.borderLeftColor = borderColor;
+
+  toast.innerHTML = `
+    <div class="toast-icon">🚨</div>
+    <div class="toast-body">
+      <div class="toast-title">Room ${room.id} · ${state.label}</div>
+      <div class="toast-text">${fluid.name} (${Math.round(fluid.remaining)}mL left) requires nurse attention.</div>
+    </div>
+  `;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  }, 4500);
+}
+
+function updateLiveBannerAndPopups() {
+  const banner = $("liveBanner");
+  let criticalCount = 0;
+  let latestAlertText = "";
+
+  rooms.forEach(r => {
+    r.fluids.forEach(f => {
+      const st = getFluidAlertState(f);
+      if(st.key !== "normal") {
+        if((st.key === "critical" || st.key === "detached") && !acknowledged.has(f.fId)) {
+          criticalCount++;
+          latestAlertText = `Room ${r.id} (${f.name}) - ${st.label}`;
+        }
+        
+        // Trigger a popup toast if this specific state hasn't been notified yet
+        const alertKey = `${f.fId}-${st.key}`;
+        if(!seenAlerts.has(alertKey) && !acknowledged.has(f.fId)) {
+          seenAlerts.add(alertKey);
+          showPopupNotification(r, f, st);
+        }
+      }
+    });
+  });
+
+  if(criticalCount > 0) {
+    banner.classList.add("active");
+    $("bannerText").textContent = `CRITICAL EXCEPTION (${criticalCount}): ${latestAlertText}`;
+  } else {
+    banner.classList.remove("active");
+  }
 }
 
 function updateClock(){
@@ -591,6 +650,7 @@ function renderMetrics(){
   
   $("alertCount").textContent = alertCountTotal;
   $("boardSummary").textContent = `${rooms.length} sample rooms · Updated ${lastUpdated.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"})}`;
+  updateLiveBannerAndPopups();
 }
 
 function filteredRooms(){
@@ -678,14 +738,17 @@ window.handleAdjust = function(rId, fId){
   if(value === null) return;
   const num = Number(value);
   if(!Number.isFinite(num) || num < 0 || num > f.total){
-    notify(`Enter a valid number between 0 and ${f.total}.`); return;
+    alert(`Enter a valid number between 0 and ${f.total}.`); return;
   }
   f.lastRemaining = f.remaining;
   f.remaining = num;
   f.state = "normal";
   acknowledged.delete(fId);
+  seenAlerts.delete(`${fId}-critical`);
+  seenAlerts.delete(`${fId}-attention`);
+  seenAlerts.delete(`${fId}-stagnant`);
+  seenAlerts.delete(`${fId}-erratic`);
   touchData(); renderAll();
-  notify(`Updated ${f.name} to ${Math.round(num)} mL.`);
 };
 
 window.handleToggleDevice = function(rId, fId){
@@ -697,17 +760,16 @@ window.handleToggleDevice = function(rId, fId){
   } else {
     f.device = "Connected";
     f.state = "normal";
+    seenAlerts.delete(`${fId}-detached`);
   }
   acknowledged.delete(fId);
   touchData(); renderAll();
-  notify(`${f.name} status updated.`);
 };
 
 window.handleAck = function(fId){
   if(acknowledged.has(fId)) acknowledged.delete(fId);
   else acknowledged.add(fId);
   renderAll();
-  notify(`Alert acknowledgment updated.`);
 };
 
 function renderDetails(){
@@ -907,14 +969,11 @@ function simulateUpdate(){
       const rand = Math.random();
 
       if(rand < 0.1) {
-        // Stagnant / No change (Occlusion)
         f.state = "stagnant";
       } else if(rand < 0.18) {
-        // Erratic change (sudden drop or jump)
         f.state = "erratic";
         f.remaining = Math.max(0, f.remaining - (Math.random() * 40 + 20));
       } else {
-        // Normal consumption
         if(f.state === "stagnant" || f.state === "erratic") f.state = "normal";
         if(f.remaining > 0) {
           f.remaining = Math.max(0, f.remaining - (Math.random() * 3 + 0.5));
@@ -927,15 +986,15 @@ function simulateUpdate(){
 
 $("updateBtn").addEventListener("click", () => {
   simulateUpdate();
-  notify("Telemetry synchronized across ward.");
 });
 
 function resetDemo(){
   rooms = cloneInitial();
   selectedId = "103";
   acknowledged.clear();
+  seenAlerts.clear();
   $("roomSearch").value = ""; $("statusFilter").value = "all"; $("wardFilter").value = "all"; $("directorySearch").value = "";
-  touchData(); renderAll(); notify("Demo values restored.");
+  touchData(); renderAll();
 }
 
 function configureTimer(){
@@ -959,22 +1018,22 @@ $("ackAll").addEventListener("click", () => {
       if(getFluidAlertState(f).key !== "normal") acknowledged.add(f.fId);
     });
   });
-  renderAll(); notify("All active alerts acknowledged.");
+  renderAll();
 });
 
 $("saveSettings").addEventListener("click", () => {
   const c = Number($("criticalThreshold").value), a = Number($("attentionThreshold").value);
   if(!Number.isInteger(c) || !Number.isInteger(a) || c < 1 || c > 500 || a <= c || a > 1000){
-    notify("Use valid critical (1–500) and attention thresholds."); return;
+    alert("Use valid critical (1–500) and attention thresholds."); return;
   }
   criticalThreshold = c; attentionThreshold = a; autoUpdate = $("autoUpdate").checked;
   intervalSeconds = Number($("updateInterval").value);
-  configureTimer(); renderAll(); notify("Settings saved.");
+  configureTimer(); renderAll();
 });
 
 $("pauseBtn").addEventListener("click", () => {
   autoUpdate = !autoUpdate; $("autoUpdate").checked = autoUpdate;
-  configureTimer(); notify(autoUpdate ? "Simulation resumed." : "Simulation paused.");
+  configureTimer();
 });
 
 $("autoUpdate").addEventListener("change", () => {
