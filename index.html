@@ -62,7 +62,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
 
 /* Top Live Emergency Notification Bar */
 .live-banner{background:linear-gradient(90deg, #991b1b, #b91c1c);color:#fff;padding:10px 24px;
-  font-size:12px;font-weight:700;display:none;align-items:center;justify-content:between;gap:12px;animation:pulseBanner 2s infinite}
+  font-size:12px;font-weight:700;display:none;align-items:center;justify-content:space-between;gap:12px;animation:pulseBanner 2s infinite}
 .live-banner.active{display:flex}
 .live-banner-content{display:flex;align-items:center;gap:8px;flex:1}
 @keyframes pulseBanner{0%{opacity:0.95}50%{opacity:1}100%{opacity:0.95}}
@@ -89,6 +89,7 @@ h1{font-size:27px;line-height:1.2;letter-spacing:-.8px;margin:0}
 .btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
 .btn.primary:hover{background:#194fce}
 .btn.danger{color:var(--red);border-color:#f0c5c9}
+.btn.danger:hover{background:var(--red-bg)}
 .btn.small{padding:7px 10px;font-size:11px}
 .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:19px}
 .metric{background:#fff;border:1px solid var(--border);border-radius:var(--radius);
@@ -164,7 +165,6 @@ input::placeholder{color:#8493a2}
 .detail-stat{padding:13px;border-radius:10px;}
 .detail-stat-label{font-size:10px;font-weight:750}
 .detail-stat-value{font-size:15px;font-weight:850;margin-top:6px;overflow-wrap:anywhere}
-.section-label{font-size:12px;font-weight:850;margin:19px 0 10px}
 .detail-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .event{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--border)}
 .event:last-child{border-bottom:0}
@@ -210,6 +210,20 @@ tbody tr:hover{background:#f8faff}
 .setting-control{display:flex;align-items:center;gap:7px;white-space:nowrap}
 .setting-control input[type=number]{width:90px}
 .setting-control input[type=checkbox]{width:22px;height:22px;accent-color:var(--blue)}
+
+/* Patient Management Form & List */
+.patient-layout{display:grid;grid-template-columns:minmax(300px,420px) minmax(0,1fr);gap:17px;align-items:start}
+.form-grid{display:grid;gap:12px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:11px;font-weight:800;color:var(--text)}
+.field-hint{font-size:10px;color:var(--muted)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.patient-row-list{display:grid;gap:10px}
+.patient-item{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:13px 15px;border:1px solid var(--border);border-radius:11px;background:#fff}
+.patient-item-title{font-size:13px;font-weight:850}
+.patient-item-sub{font-size:11px;color:var(--muted);margin-top:3px}
+
 .footer{text-align:center;color:#82909d;font-size:10px;padding:25px 0 0}
 
 /* Floating Real-time Toast Popups */
@@ -227,7 +241,7 @@ tbody tr:hover{background:#f8faff}
 @keyframes appear{from{opacity:.6;transform:translateY(3px)}to{opacity:1;transform:none}}
 
 @media(max-width:1200px){
-  .layout{grid-template-columns:1fr}
+  .layout,.patient-layout{grid-template-columns:1fr}
   .floor{grid-template-columns:repeat(4,minmax(0,1fr))}
   .device-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
@@ -262,13 +276,14 @@ tbody tr:hover{background:#f8faff}
   .search{width:100%; max-width:100%}
   .toolbar select{width:100%}
   .device-grid{grid-template-columns:1fr}
-  .alert-card{flex-wrap:wrap}
+  .alert-card,.patient-item{flex-wrap:wrap}
   .alert-content{flex-basis:calc(100% - 55px)}
   .alert-actions{margin-left:46px; width:100%; margin-top:4px}
   .detail-value{font-size:32px}
   .top-right{gap:7px}
   .clock{font-size:10px}
   .demo-pill{font-size:9px;padding:6px}
+  .field-row{grid-template-columns:1fr}
   .mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:99;
     background:#fff;border-top:1px solid var(--border);justify-content:space-around;
     padding:8px 4px calc(8px + env(safe-area-inset-bottom)); box-shadow:0 -4px 12px rgba(0,0,0,0.03)}
@@ -292,6 +307,7 @@ tbody tr:hover{background:#f8faff}
     </div>
     <div class="nav-label">WORKSPACE</div>
     <button class="nav-item active" data-view="overview"><span class="nav-icon">▦</span><span class="nav-text">Overview</span></button>
+    <button class="nav-item" data-view="patients"><span class="nav-icon">✚</span><span class="nav-text">Patients</span></button>
     <button class="nav-item" data-view="directory"><span class="nav-icon">☷</span><span class="nav-text">Room directory</span></button>
     <button class="nav-item" data-view="alerts"><span class="nav-icon">⚑</span><span class="nav-text">Alert center</span><span class="nav-count" id="alertCount">0</span></button>
     <div class="nav-label">SYSTEM</div>
@@ -376,6 +392,103 @@ tbody tr:hover{background:#f8faff}
         </div>
       </section>
 
+      <section id="patients" class="view">
+        <div class="patient-layout">
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-title">Add / admit patient infusion</div>
+                <div class="panel-subtitle">Select from common presets or type custom values.</div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <form id="addPatientForm" class="form-grid">
+                <div class="field-row">
+                  <div class="field">
+                    <label for="newRoom">Room number</label>
+                    <input type="text" id="newRoom" placeholder="e.g., 113 or 204B" required>
+                  </div>
+                  <div class="field">
+                    <label for="newWard">Ward</label>
+                    <select id="newWard">
+                      <option value="Medical">Medical</option>
+                      <option value="Surgical">Surgical</option>
+                      <option value="ICU">ICU</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label for="newSolution">IV solution</label>
+                  <input type="text" id="newSolution" list="solutionOptions" placeholder="Choose or type IV solution…" required>
+                  <datalist id="solutionOptions">
+                    <option value="0.9% NaCl (Saline)">
+                    <option value="Lactated Ringer's">
+                    <option value="Dextrose 5%">
+                    <option value="Dextrose 10%">
+                    <option value="Potassium Chloride">
+                    <option value="Antibiotic (Ceftriaxone)">
+                    <option value="Norepinephrine">
+                    <option value="Propofol">
+                    <option value="Heparin">
+                    <option value="Insulin">
+                  </datalist>
+                  <span class="field-hint">Tap to select a common solution or type any custom medication/fluid.</span>
+                </div>
+
+                <div class="field-row">
+                  <div class="field">
+                    <label for="newBagSize">Bag size (mL)</label>
+                    <input type="number" id="newBagSize" list="bagSizeOptions" min="1" max="5000" placeholder="e.g., 1000" required>
+                    <datalist id="bagSizeOptions">
+                      <option value="50">
+                      <option value="100">
+                      <option value="250">
+                      <option value="500">
+                      <option value="1000">
+                    </datalist>
+                    <span class="field-hint">Common: 50, 100, 250, 500, 1000 mL</span>
+                  </div>
+
+                  <div class="field">
+                    <label for="newFlowRate">Flow rate (mL/h)</label>
+                    <input type="number" id="newFlowRate" list="flowRateOptions" min="0" max="1500" placeholder="e.g., 100" required>
+                    <datalist id="flowRateOptions">
+                      <option value="5">
+                      <option value="10">
+                      <option value="25">
+                      <option value="50">
+                      <option value="75">
+                      <option value="100">
+                      <option value="125">
+                      <option value="150">
+                    </datalist>
+                    <span class="field-hint">Common: 5–150 mL/h or custom rate</span>
+                  </div>
+                </div>
+
+                <div class="actions" style="margin-top:6px">
+                  <button type="submit" class="btn primary" style="width:100%">+ Add to dashboard</button>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-title">Manage active patients</div>
+                <div class="panel-subtitle">Remove discharged rooms or individual IV lines from the board.</div>
+              </div>
+              <input class="search" id="patientManageSearch" placeholder="Filter room or fluid…" aria-label="Filter managed patients">
+            </div>
+            <div class="panel-body">
+              <div id="managePatientList" class="patient-row-list"></div>
+            </div>
+          </section>
+        </div>
+      </section>
+
       <section id="directory" class="view">
         <section class="panel">
           <div class="panel-head"><div><div class="panel-title">Room directory</div>
@@ -441,9 +554,9 @@ tbody tr:hover{background:#f8faff}
 
 <nav class="mobile-nav" aria-label="Mobile navigation">
   <button class="active" data-view="overview"><span>▦</span>Overview</button>
+  <button data-view="patients"><span>✚</span>Patients</button>
   <button data-view="directory"><span>☷</span>Rooms</button>
   <button data-view="alerts"><span>⚑</span>Alerts</button>
-  <button data-view="devices"><span>▣</span>Devices</button>
   <button data-view="settings"><span>⚙</span>Settings</button>
 </nav>
 
@@ -502,7 +615,7 @@ const $ = id => document.getElementById(id);
 let rooms = cloneInitial();
 let selectedId = "103";
 let acknowledged = new Set();
-let seenAlerts = new Set(); // Tracks what has already popped up as a notification
+let seenAlerts = new Set();
 let criticalThreshold = 50; 
 let attentionThreshold = 100; 
 let autoUpdate = true;
@@ -603,7 +716,6 @@ function updateLiveBannerAndPopups() {
           latestAlertText = `Room ${r.id} (${f.name}) - ${st.label}`;
         }
         
-        // Trigger a popup toast if this specific state hasn't been notified yet
         const alertKey = `${f.fId}-${st.key}`;
         if(!seenAlerts.has(alertKey) && !acknowledged.has(f.fId)) {
           seenAlerts.add(alertKey);
@@ -626,6 +738,7 @@ function updateClock(){
 }
 
 function renderMetrics(){
+  const totalRooms = rooms.length;
   const normal = rooms.filter(r => roomStatus(r).key === "normal").length;
   const attention = rooms.filter(r => roomStatus(r).key === "attention" || roomStatus(r).key === "erratic").length;
   const critical = rooms.filter(r => roomStatus(r).key === "critical").length;
@@ -636,9 +749,11 @@ function renderMetrics(){
     if(getFluidAlertState(f).key !== "normal" && !acknowledged.has(f.fId)) alertCountTotal++;
   });
 
+  const normalPct = totalRooms ? Math.round(normal / totalRooms * 100) : 0;
+
   const cards = [
-    ["Monitored patients", rooms.length, "Central Floor Board", "neutral"],
-    ["Normal status", normal, `${Math.round(normal/rooms.length*100)}% of patients`, "good"],
+    ["Monitored patients", totalRooms, "Central Floor Board", "neutral"],
+    ["Normal status", normal, `${normalPct}% of patients`, "good"],
     ["Active alerts", alertCountTotal, `${critical} critical/detached · ${attention} warnings`, "urgent"],
     ["Connected sensors", allFluids.filter(f=>f.device==="Connected" && f.state!=="detached").length, "Active telemetry", "caution"]
   ];
@@ -649,7 +764,7 @@ function renderMetrics(){
     </article>`).join("");
   
   $("alertCount").textContent = alertCountTotal;
-  $("boardSummary").textContent = `${rooms.length} sample rooms · Updated ${lastUpdated.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"})}`;
+  $("boardSummary").textContent = `${totalRooms} sample rooms · Updated ${lastUpdated.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"})}`;
   updateLiveBannerAndPopups();
 }
 
@@ -697,7 +812,7 @@ function renderFloor(){
       <div class="fluids-list">
         ${r.fluids.map(f => {
           const fs = getFluidAlertState(f);
-          const pct = Math.max(0, Math.min(100, (f.remaining / f.total) * 100));
+          const pct = f.total > 0 ? Math.max(0, Math.min(100, (f.remaining / f.total) * 100)) : 0;
           return `
             <div class="fluid-item" style="border-left: 3px solid ${fs.color}">
               <div class="fluid-item-head">
@@ -724,7 +839,7 @@ window.selectRoom = function(id){
   selectedId = id;
   renderFloor();
   renderDetails();
-  if(window.innerWidth <= 1200) {
+  if(window.innerWidth <= 1200 && currentView === "overview") {
     setTimeout(() => {
       $("detailPanel").scrollIntoView({behavior: "smooth", block: "start"});
     }, 50);
@@ -733,7 +848,9 @@ window.selectRoom = function(id){
 
 window.handleAdjust = function(rId, fId){
   const r = rooms.find(x => x.id === rId);
+  if(!r) return;
   const f = r.fluids.find(x => x.fId === fId);
+  if(!f) return;
   const value = prompt(`Set remaining mL for ${f.name} (0 - ${f.total}):`, Math.round(f.remaining));
   if(value === null) return;
   const num = Number(value);
@@ -753,7 +870,9 @@ window.handleAdjust = function(rId, fId){
 
 window.handleToggleDevice = function(rId, fId){
   const r = rooms.find(x => x.id === rId);
+  if(!r) return;
   const f = r.fluids.find(x => x.fId === fId);
+  if(!f) return;
   if(f.device === "Connected") {
     f.device = "Offline";
     f.state = "detached";
@@ -772,9 +891,81 @@ window.handleAck = function(fId){
   renderAll();
 };
 
+window.removeRoom = function(rId){
+  const r = rooms.find(x => x.id === rId);
+  if(!r) return;
+  r.fluids.forEach(f => {
+    acknowledged.delete(f.fId);
+    ["critical","attention","stagnant","erratic","detached"].forEach(k => seenAlerts.delete(`${f.fId}-${k}`));
+  });
+  rooms = rooms.filter(x => x.id !== rId);
+  if(selectedId === rId) {
+    selectedId = rooms.length ? rooms[0].id : null;
+  }
+  touchData(); renderAll();
+  showSimpleToast(`Removed Room ${rId} from dashboard.`);
+};
+
+window.removeFluidLine = function(rId, fId){
+  const r = rooms.find(x => x.id === rId);
+  if(!r) return;
+  r.fluids = r.fluids.filter(f => f.fId !== fId);
+  acknowledged.delete(fId);
+  ["critical","attention","stagnant","erratic","detached"].forEach(k => seenAlerts.delete(`${fId}-${k}`));
+  if(r.fluids.length === 0) {
+    rooms = rooms.filter(x => x.id !== rId);
+    if(selectedId === rId) selectedId = rooms.length ? rooms[0].id : null;
+  }
+  touchData(); renderAll();
+  showSimpleToast(`Removed IV line from Room ${rId}.`);
+};
+
+function showSimpleToast(msg){
+  const container = $("toastContainer");
+  const toast = document.createElement("div");
+  toast.className = "toast-alert show";
+  toast.style.borderLeftColor = "var(--blue)";
+  toast.innerHTML = `<div class="toast-icon">ℹ</div><div class="toast-body"><div class="toast-title">Dashboard Update</div><div class="toast-text">${msg}</div></div>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+function renderManagePatients(){
+  const q = ($("patientManageSearch").value || "").toLowerCase().trim();
+  const list = rooms.filter(r => {
+    const fNames = r.fluids.map(f => f.name).join(" ");
+    return `${r.id} ${r.ward} ${fNames}`.toLowerCase().includes(q);
+  }).sort((a,b) => a.id.localeCompare(b.id));
+
+  $("managePatientList").innerHTML = list.length ? list.map(r => `
+    <div class="patient-item">
+      <div style="flex:1; min-width:0">
+        <div class="patient-item-title">Room ${r.id} · <span style="color:var(--muted); font-weight:600">${r.ward} Ward</span></div>
+        <div class="patient-item-sub">
+          ${r.fluids.map(f => `
+            <span style="display:inline-flex; align-items:center; gap:6px; margin-right:10px; margin-top:4px">
+              • <strong>${f.name}</strong> (${Math.round(f.remaining)}/${f.total} mL @ ${f.rate} mL/h)
+              <button type="button" class="btn small danger" style="padding:2px 6px; font-size:10px" onclick="window.removeFluidLine('${r.id}','${f.fId}')" title="Remove this IV line">× line</button>
+            </span>
+          `).join("")}
+        </div>
+      </div>
+      <button type="button" class="btn small danger" onclick="window.removeRoom('${r.id}')">Remove room</button>
+    </div>
+  `).join("") : `<div class="empty-state">No active patients match your filter.</div>`;
+}
+
 function renderDetails(){
   const r = rooms.find(x => x.id === selectedId);
-  if(!r){ $("roomDetails").innerHTML = '<div class="empty-state">Select a room to inspect its details.</div>'; return; }
+  if(!r){
+    $("detailStatus").className = "status-tag neutral";
+    $("detailStatus").textContent = "NONE";
+    $("roomDetails").innerHTML = '<div class="empty-state">Select a room to inspect its details, or add a patient in the Patients tab.</div>';
+    return;
+  }
   
   const rs = roomStatus(r);
   $("detailStatus").className = `status-tag ${rs.key}`;
@@ -782,7 +973,7 @@ function renderDetails(){
   
   const cardsHtml = r.fluids.map(f => {
     const fs = getFluidAlertState(f);
-    const pct = Math.max(0, Math.min(100, (f.remaining / f.total) * 100));
+    const pct = f.total > 0 ? Math.max(0, Math.min(100, (f.remaining / f.total) * 100)) : 0;
     
     let bgStyle = "background:linear-gradient(130deg,#123047,#20566b);";
     if(fs.key === "critical" || fs.key === "detached") bgStyle = "background:linear-gradient(130deg,#8b1b24,#5c0c14);";
@@ -934,7 +1125,7 @@ function renderDevices(){
 }
 
 function renderAll(){
-  renderMetrics(); renderFloor(); renderDetails(); renderDirectory(); renderAlerts(); renderDevices();
+  renderMetrics(); renderFloor(); renderDetails(); renderDirectory(); renderAlerts(); renderDevices(); renderManagePatients();
 }
 
 window.showView = function(view){
@@ -947,6 +1138,7 @@ window.showView = function(view){
   });
   const titles = {
     overview: ["Infusion overview", "Scan the ward, identify exceptions, and inspect a room."],
+    patients: ["Patient management", "Add new patient infusions or remove discharged rooms and lines."],
     directory: ["Room directory", "Find a room and inspect its active infusions."],
     alerts: ["Alert center", "Review and acknowledge advanced system alerts."],
     devices: ["Device inventory", "Inspect physical sensor attachment and hardware."],
@@ -984,6 +1176,58 @@ function simulateUpdate(){
   touchData(); renderAll();
 }
 
+$("addPatientForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const roomNum = $("newRoom").value.trim();
+  const ward = $("newWard").value;
+  const solution = $("newSolution").value.trim();
+  const bagSize = Number($("newBagSize").value);
+  const flowRate = Number($("newFlowRate").value);
+
+  if(!roomNum || !solution || !Number.isFinite(bagSize) || bagSize <= 0 || !Number.isFinite(flowRate) || flowRate < 0){
+    alert("Please enter a valid room number, IV solution, bag size (> 0), and flow rate (≥ 0).");
+    return;
+  }
+
+  let existingRoom = rooms.find(r => r.id.toLowerCase() === roomNum.toLowerCase());
+  const newFluid = {
+    fId: `${roomNum}-${Date.now().toString().slice(-4)}`,
+    name: solution,
+    remaining: bagSize,
+    total: bagSize,
+    rate: flowRate,
+    device: "Connected",
+    state: "normal",
+    lastRemaining: bagSize
+  };
+
+  if(existingRoom) {
+    existingRoom.ward = ward;
+    existingRoom.fluids.push(newFluid);
+    selectedId = existingRoom.id;
+    showSimpleToast(`Added ${solution} to Room ${existingRoom.id}.`);
+  } else {
+    const newRoomObj = {
+      id: roomNum,
+      ward: ward,
+      fluids: [newFluid]
+    };
+    rooms.push(newRoomObj);
+    selectedId = newRoomObj.id;
+    showSimpleToast(`Admitted Room ${roomNum} (${solution}).`);
+  }
+
+  $("newRoom").value = "";
+  $("newSolution").value = "";
+  $("newBagSize").value = "";
+  $("newFlowRate").value = "";
+
+  touchData();
+  renderAll();
+});
+
+$("patientManageSearch").addEventListener("input", renderManagePatients);
+
 $("updateBtn").addEventListener("click", () => {
   simulateUpdate();
 });
@@ -993,7 +1237,7 @@ function resetDemo(){
   selectedId = "103";
   acknowledged.clear();
   seenAlerts.clear();
-  $("roomSearch").value = ""; $("statusFilter").value = "all"; $("wardFilter").value = "all"; $("directorySearch").value = "";
+  $("roomSearch").value = ""; $("statusFilter").value = "all"; $("wardFilter").value = "all"; $("directorySearch").value = ""; $("patientManageSearch").value = "";
   touchData(); renderAll();
 }
 
