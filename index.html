@@ -3,29 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-<meta name="theme-color" content="#123047">
+<meta name="theme-color" content="#003161">
 <title>IVision | Infusion Monitoring Dashboard</title>
 <style>
 :root {
-  --navy:#123047;
-  --navy2:#1b4259;
-  --blue:#2463eb;
-  --blue-light:#edf3ff;
-  --bg:#f4f7fa;
-  --surface:#fff;
-  --text:#182b3b;
-  --muted:#647587;
-  --border:#dfe7ee;
-  --green:#16805d;
-  --green-bg:#e6f5ed;
-  --amber:#996000;
-  --amber-bg:#fff2d8;
-  --purple:#7c3aed;
-  --purple-bg:#f5f3ff;
-  --red:#bd303b;
-  --red-bg:#ffeaec;
-  --shadow:0 3px 12px #193b5010;
-  --radius:14px;
+  --brand-dark: #003161;
+  --brand-mid: #00c7dd;
+  --brand-light: #96e9f0;
+  --brand-white: #fefdfd;
+
+  --navy: var(--brand-dark);
+  --navy2: #004687;
+  --blue: var(--brand-mid);
+  --blue-hover: #00acc1;
+  --blue-light: #e6fbfd;
+  --bg: #f2f8fa;
+  --surface: var(--brand-white);
+  --text: var(--brand-dark);
+  --muted: #4e6d85;
+  --border: #d5e8ef;
+
+  --green: #16805d;
+  --green-bg: #e6f5ed;
+  --amber: #996000;
+  --amber-bg: #fff2d8;
+  --purple: #7c3aed;
+  --purple-bg: #f5f3ff;
+  --red: #bd303b;
+  --red-bg: #ffeaec;
+
+  --shadow: 0 4px 16px rgba(0, 49, 97, 0.06);
+  --radius: 14px;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);
@@ -34,30 +42,45 @@ body{margin:0;background:var(--bg);color:var(--text);
 button,input,select{font:inherit}
 button{cursor:pointer}
 button:focus-visible,input:focus-visible,select:focus-visible{
-  outline:3px solid #8bb4ff;outline-offset:2px}
+  outline:3px solid var(--brand-light);outline-offset:2px}
 button:disabled{opacity:.5;cursor:not-allowed}
-.app{min-height:100vh;display:grid;grid-template-columns:232px minmax(0,1fr)}
-.sidebar{background:var(--navy);color:#fff;padding:22px 14px;
-  display:flex;flex-direction:column;min-height:100vh}
-.brand{display:flex;align-items:center;gap:11px;padding:2px 8px 27px}
-.brand-icon{height:40px;width:40px;border-radius:12px;background:#d7f5ef;
-  color:var(--navy);display:grid;place-items:center;font-size:17px;font-weight:900}
-.brand-name{font-size:21px;font-weight:800;letter-spacing:-.7px}
-.brand-sub{font-size:10px;color:#b9cbd8;letter-spacing:1.2px;margin-top:2px}
-.nav-label{font-size:10px;letter-spacing:1.4px;color:#9bb1c1;
+
+@keyframes ivBagFloat {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-3px) scale(1.03); }
+}
+
+.app{min-height:100vh;display:grid;grid-template-columns:244px minmax(0,1fr)}
+.sidebar{background:linear-gradient(180deg, var(--brand-dark) 0%, #002347 100%);
+  color:var(--brand-white);padding:22px 14px;
+  display:flex;flex-direction:column;min-height:100vh;border-right:1px solid rgba(150,233,240,0.18)}
+.brand{display:flex;flex-direction:column;align-items:flex-start;gap:8px;
+  padding:4px 8px 22px;border-bottom:1px solid rgba(150,233,240,0.14);margin-bottom:10px}
+.brand-logo-wrap{display:flex;align-items:center;gap:10px;width:100%}
+.brand-logo-img{max-height:46px;max-width:100%;width:auto;object-fit:contain;
+  border-radius:8px;background:var(--brand-white);padding:4px 8px}
+.brand-isotype-badge{height:38px;width:38px;border-radius:11px;
+  background:rgba(150,233,240,0.14);border:1px solid rgba(150,233,240,0.35);
+  display:grid;place-items:center;padding:4px;flex-shrink:0;
+  animation:ivBagFloat 2.8s ease-in-out infinite}
+.brand-isotype-img{width:100%;height:100%;object-fit:contain;border-radius:6px}
+.brand-sub{font-size:10px;color:var(--brand-light);letter-spacing:1.2px;font-weight:700}
+
+.nav-label{font-size:10px;letter-spacing:1.4px;color:var(--brand-light);opacity:.8;
   font-weight:800;padding:13px 11px 7px}
-.nav-item{border:0;background:transparent;color:#d1dde6;width:100%;
+.nav-item{border:0;background:transparent;color:var(--brand-white);opacity:.86;width:100%;
   text-align:left;display:flex;align-items:center;gap:11px;
-  padding:12px 11px;border-radius:9px;margin:3px 0;font-weight:600}
-.nav-item:hover{background:#ffffff12;color:#fff}
-.nav-item.active{background:#ffffff1b;color:#fff;box-shadow:inset 3px 0 #73d9c1}
-.nav-icon{width:21px;text-align:center;font-size:17px}
-.nav-count{margin-left:auto;border-radius:20px;background:#bd303b;
-  color:#fff;font-size:11px;padding:2px 7px}
-.sidebar-bottom{margin-top:auto;padding:18px 9px 3px;border-top:1px solid #ffffff25;
-  color:#c3d2dc;font-size:11px}
-.demo-indicator{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:6px}
-.dot{width:8px;height:8px;display:inline-block;border-radius:50%;background:#61d7ae}
+  padding:12px 11px;border-radius:9px;margin:3px 0;font-weight:600;transition:all .15s ease}
+.nav-item:hover{background:rgba(0,199,221,0.14);opacity:1}
+.nav-item.active{background:rgba(0,199,221,0.22);color:var(--brand-white);opacity:1;
+  box-shadow:inset 3px 0 var(--brand-mid)}
+.nav-icon{width:21px;text-align:center;font-size:17px;color:var(--brand-light)}
+.nav-count{margin-left:auto;border-radius:20px;background:var(--red);
+  color:var(--brand-white);font-size:11px;padding:2px 7px}
+.sidebar-bottom{margin-top:auto;padding:16px 9px 3px;border-top:1px solid rgba(150,233,240,0.18);
+  color:var(--brand-light);font-size:11px}
+.demo-indicator{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:6px;color:var(--brand-white)}
+.dot{width:8px;height:8px;display:inline-block;border-radius:50%;background:var(--brand-mid)}
 .main{min-width:0}
 
 /* Top Live Emergency Notification Bar */
@@ -67,48 +90,57 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .live-banner-content{display:flex;align-items:center;gap:8px;flex:1}
 @keyframes pulseBanner{0%{opacity:0.95}50%{opacity:1}100%{opacity:0.95}}
 
-.topbar{background:#fff;border-bottom:1px solid var(--border);
+.topbar{background:var(--brand-white);border-bottom:1px solid var(--border);
   padding:14px 28px;min-height:67px;display:flex;align-items:center;
   justify-content:space-between;gap:14px}
 .breadcrumb{font-size:12px;color:var(--muted)}
-.breadcrumb strong{color:var(--text)}
+.breadcrumb strong{color:var(--brand-dark)}
 .top-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .demo-pill{display:flex;align-items:center;gap:7px;padding:7px 10px;
-  border-radius:8px;background:#fff4df;color:#82530b;font-weight:800;font-size:10px}
+  border-radius:8px;background:var(--blue-light);border:1px solid var(--brand-light);
+  color:var(--brand-dark);font-weight:800;font-size:10px}
 .clock{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
 .content{max-width:1700px;margin:auto;padding:27px 28px 35px}
-.page-heading{display:flex;justify-content:space-between;align-items:flex-start;
+.page-heading{display:flex;justify-content:space-between;align-items:center;
   gap:18px;margin-bottom:22px}
-h1{font-size:27px;line-height:1.2;letter-spacing:-.8px;margin:0}
-.subtitle{font-size:13px;color:var(--muted);margin-top:7px}
+.page-title-group{display:flex;align-items:center;gap:14px}
+.header-bag-anim{width:46px;height:46px;border-radius:12px;background:var(--brand-white);
+  border:1px solid var(--border);padding:5px;display:grid;place-items:center;
+  box-shadow:var(--shadow);animation:ivBagFloat 2.8s ease-in-out infinite;flex-shrink:0}
+.header-bag-anim img{width:100%;height:100%;object-fit:contain}
+h1{font-size:27px;line-height:1.2;letter-spacing:-.8px;margin:0;color:var(--brand-dark)}
+.subtitle{font-size:13px;color:var(--muted);margin-top:5px}
 .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.btn{border:1px solid var(--border);background:#fff;color:var(--text);
+.btn{border:1px solid var(--border);background:var(--brand-white);color:var(--brand-dark);
   border-radius:9px;padding:10px 13px;font-size:12px;font-weight:750;
-  display:inline-flex;align-items:center;justify-content:center;gap:7px}
-.btn:hover{background:#f7f9fc;border-color:#b8c9d9}
-.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
-.btn.primary:hover{background:#194fce}
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:all .15s ease}
+.btn:hover{background:var(--blue-light);border-color:var(--brand-mid)}
+.btn.primary{background:var(--brand-dark);border-color:var(--brand-dark);color:var(--brand-white)}
+.btn.primary:hover{background:#004687;border-color:#004687}
+.btn.accent{background:var(--brand-mid);border-color:var(--brand-mid);color:var(--brand-dark)}
+.btn.accent:hover{background:var(--blue-hover);border-color:var(--blue-hover)}
 .btn.danger{color:var(--red);border-color:#f0c5c9}
 .btn.danger:hover{background:var(--red-bg)}
 .btn.small{padding:7px 10px;font-size:11px}
 .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:19px}
-.metric{background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+.metric{background:var(--brand-white);border:1px solid var(--border);border-radius:var(--radius);
   padding:17px 18px;box-shadow:var(--shadow);min-width:0}
 .metric-label{color:var(--muted);font-size:12px;font-weight:700}
 .metric-value{font-size:31px;font-weight:850;letter-spacing:-1px;margin:7px 0 2px;
-  font-variant-numeric:tabular-nums}
+  font-variant-numeric:tabular-nums;color:var(--brand-dark)}
 .metric-foot{font-size:11px;color:var(--muted)}
 .metric.urgent{border-top:3px solid var(--red)}
-.metric.caution{border-top:3px solid #e0a12a}
+.metric.caution{border-top:3px solid var(--brand-mid)}
 .metric.good{border-top:3px solid var(--green)}
-.metric.neutral{border-top:3px solid var(--blue)}
+.metric.neutral{border-top:3px solid var(--brand-dark)}
 .view{display:none}
 .view.active{display:block;animation:appear .18s ease}
-.panel{background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+.panel{background:var(--brand-white);border:1px solid var(--border);border-radius:var(--radius);
   box-shadow:var(--shadow);min-width:0;overflow:hidden}
 .panel-head{padding:17px 19px;display:flex;align-items:center;
-  justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
-.panel-title{font-size:15px;font-weight:800}
+  justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--border);
+  background:linear-gradient(90deg, var(--brand-white) 0%, #f7fcfd 100%)}
+.panel-title{font-size:15px;font-weight:800;color:var(--brand-dark)}
 .panel-subtitle{font-size:11px;color:var(--muted);margin-top:4px}
 .panel-body{padding:18px}
 .layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(310px,.85fr);
@@ -118,19 +150,19 @@ h1{font-size:27px;line-height:1.2;letter-spacing:-.8px;margin:0}
 .legend-swatch{width:9px;height:9px;border-radius:3px}
 .toolbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:15px}
 .search{width:220px;max-width:100%}
-input,select{border:1px solid #cbd7e1;border-radius:9px;background:#fff;
-  color:var(--text);padding:10px 11px;min-height:39px}
-input::placeholder{color:#8493a2}
+input,select{border:1px solid #c3dce6;border-radius:9px;background:var(--brand-white);
+  color:var(--brand-dark);padding:10px 11px;min-height:39px}
+input::placeholder{color:#7895aa}
 .floor{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .room{position:relative;text-align:left;border:1px solid var(--border);
   border-left:4px solid var(--status);border-radius:11px;padding:13px;
-  min-width:0;background:#fff;color:var(--text);transition:border-color .15s,background .15s;
+  min-width:0;background:var(--brand-white);color:var(--text);transition:border-color .15s,background .15s;
   display:flex;flex-direction:column;gap:8px}
-.room:hover{background:#f8faff;border-color:#afc5dc}
-.room.selected{outline:2px solid var(--blue);outline-offset:-2px;background:#f1f6ff}
-.room:focus-visible{outline:3px solid #8bb4ff;outline-offset:1px}
+.room:hover{background:#f3fbfd;border-color:var(--brand-mid)}
+.room.selected{outline:2px solid var(--brand-mid);outline-offset:-2px;background:var(--blue-light)}
+.room:focus-visible{outline:3px solid var(--brand-light);outline-offset:1px}
 .room-top{display:flex;align-items:center;justify-content:space-between;gap:5px}
-.room-name{font-size:12px;font-weight:850}
+.room-name{font-size:12px;font-weight:850;color:var(--brand-dark)}
 .status-tag{display:inline-flex;align-items:center;gap:5px;border-radius:6px;
   padding:4px 6px;font-size:9px;line-height:1.3;font-weight:850;white-space:nowrap}
 .status-tag.normal{color:var(--green);background:var(--green-bg)}
@@ -138,104 +170,106 @@ input::placeholder{color:#8493a2}
 .status-tag.critical{color:var(--red);background:var(--red-bg)}
 .status-tag.erratic{color:var(--purple);background:var(--purple-bg)}
 .status-tag.detached{color:var(--red);background:var(--red-bg)}
-.status-tag.neutral{color:#526477;background:#edf1f5}
+.status-tag.neutral{color:var(--brand-dark);background:var(--blue-light)}
 
 .fluids-list{display:flex;flex-direction:column;gap:10px;margin-top:6px;width:100%}
-.fluid-item{display:flex;flex-direction:column;gap:3px;padding:6px;background:#f8fafc;border-radius:6px;border:1px solid var(--border)}
+.fluid-item{display:flex;flex-direction:column;gap:3px;padding:6px;background:#f7fcfd;border-radius:6px;border:1px solid var(--border)}
 .fluid-item-head{display:flex;justify-content:space-between;align-items:baseline}
 .fluid-item-name{font-size:11px;font-weight:750;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%}
 .fluid-item-val{font-size:13px;font-weight:850;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
 .fluid-item-time{font-size:9px;color:var(--muted);text-align:right}
-.progress{height:5px;background:#e9eef3;border-radius:10px;margin:2px 0;overflow:hidden}
+.progress{height:5px;background:#e1f2f6;border-radius:10px;margin:2px 0;overflow:hidden}
 .progress-fill{height:100%;border-radius:10px;transition:width 0.3s ease}
 
 .room-bottom{display:flex;justify-content:space-between;gap:5px;color:var(--muted);font-size:10px;border-top:1px solid var(--border);padding-top:8px}
 .empty-state{padding:30px 12px;text-align:center;color:var(--muted);grid-column:1/-1}
-.detail-hero{color:#fff;padding:20px;border-radius:12px;margin-bottom:13px;transition:background 0.3s}
+.detail-hero{color:var(--brand-white);padding:20px;border-radius:12px;margin-bottom:13px;transition:background 0.3s}
 .detail-hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .detail-room{font-size:18px;font-weight:850}
-.detail-type{font-size:11px;color:rgba(255,255,255,0.7);margin-top:3px}
+.detail-type{font-size:11px;color:rgba(254,253,253,0.78);margin-top:3px}
 .detail-value{font-size:38px;font-weight:850;letter-spacing:-1px;margin:16px 0 6px;font-variant-numeric:tabular-nums}
 .detail-value span{font-size:13px;letter-spacing:0;font-weight:600;margin-left:6px}
-.detail-bar{height:8px;background:#ffffff30;border-radius:9px;overflow:hidden}
+.detail-bar{height:8px;background:rgba(254,253,253,0.25);border-radius:9px;overflow:hidden}
 .detail-bar div{height:100%;border-radius:9px;transition:width 0.3s ease}
 .detail-remaining{display:flex;justify-content:space-between;gap:10px;margin-top:10px;
-  color:rgba(255,255,255,0.85);font-size:11px}
+  color:rgba(254,253,253,0.9);font-size:11px}
 .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .detail-stat{padding:13px;border-radius:10px;}
 .detail-stat-label{font-size:10px;font-weight:750}
 .detail-stat-value{font-size:15px;font-weight:850;margin-top:6px;overflow-wrap:anywhere}
 .detail-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.event{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--border)}
+.event{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--border)}
 .event:last-child{border-bottom:0}
-.event-icon{width:31px;height:31px;display:grid;place-items:center;
-  border-radius:9px;background:#edf3ff;flex-shrink:0}
-.event-title{font-size:11px;font-weight:800}
+.event-icon{width:34px;height:34px;display:grid;place-items:center;padding:4px;
+  border-radius:9px;background:var(--blue-light);border:1px solid var(--brand-light);flex-shrink:0}
+.event-icon img{width:100%;height:100%;object-fit:contain;animation:ivBagFloat 2.8s ease-in-out infinite}
+.event-title{font-size:11px;font-weight:800;color:var(--brand-dark)}
 .event-sub{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.5}
-.notice{background:#fff8e9;border:1px solid #f1dfb8;color:#76551b;
+.notice{background:var(--blue-light);border:1px solid var(--brand-light);color:var(--brand-dark);
   padding:11px 13px;border-radius:9px;font-size:11px;line-height:1.6;margin-top:14px}
 .notice strong{font-weight:850}
 .table-wrap{overflow-x:auto; -webkit-overflow-scrolling: touch;}
 table{width:100%;border-collapse:collapse;white-space:nowrap}
-th{text-align:left;color:var(--muted);background:#f7f9fb;font-size:10px;
+th{text-align:left;color:var(--muted);background:#f4fafc;font-size:10px;
   padding:13px 15px;letter-spacing:.4px}
 td{padding:13px 15px;border-top:1px solid var(--border);font-size:12px;vertical-align:top}
-tbody tr:hover{background:#f8faff}
-.table-room{border:0;background:none;color:var(--blue);font-weight:850;padding:0; min-height:30px}
+tbody tr:hover{background:#f3fbfd}
+.table-room{border:0;background:none;color:var(--brand-dark);font-weight:850;padding:0; min-height:30px;text-decoration:underline;text-decoration-color:var(--brand-mid)}
 .alert-list{display:grid;gap:10px}
 .alert-card{display:flex;align-items:flex-start;gap:12px;padding:15px;
-  border:1px solid var(--border);border-radius:11px}
+  border:1px solid var(--border);border-radius:11px;background:var(--brand-white)}
 .alert-card.critical{border-left:4px solid var(--red)}
 .alert-card.attention{border-left:4px solid #e0a12a}
 .alert-card.erratic{border-left:4px solid var(--purple)}
 .alert-card.detached{border-left:4px solid var(--red)}
-.alert-card.acknowledged{background:#f8fafc;opacity:.75}
+.alert-card.acknowledged{background:#f5fafc;opacity:.75}
 .alert-symbol{width:35px;height:35px;border-radius:9px;display:grid;
   place-items:center;flex-shrink:0;background:var(--alert-bg);font-size:17px}
 .alert-content{flex:1;min-width:0}
-.alert-title{font-weight:850;font-size:13px}
+.alert-title{font-weight:850;font-size:13px;color:var(--brand-dark)}
 .alert-description{font-size:11px;color:var(--muted);line-height:1.6;margin-top:5px}
 .alert-actions{display:flex;gap:6px;flex-wrap:wrap}
 .device-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
-.device-card{padding:16px;border:1px solid var(--border);border-radius:11px}
+.device-card{padding:16px;border:1px solid var(--border);border-radius:11px;background:var(--brand-white)}
 .device-top{display:flex;justify-content:space-between;gap:8px}
-.device-name{font-size:13px;font-weight:850}
+.device-name{font-size:13px;font-weight:850;color:var(--brand-dark)}
 .device-id{font-size:10px;color:var(--muted);margin-top:4px}
 .device-state{font-size:11px;font-weight:800;margin:14px 0 6px}
 .settings-form{max-width:720px}
 .setting-row{display:flex;align-items:center;justify-content:space-between;gap:20px;
   padding:16px 0;border-bottom:1px solid var(--border)}
-.setting-title{font-size:13px;font-weight:850}
+.setting-title{font-size:13px;font-weight:850;color:var(--brand-dark)}
 .setting-desc{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5}
 .setting-control{display:flex;align-items:center;gap:7px;white-space:nowrap}
 .setting-control input[type=number]{width:90px}
-.setting-control input[type=checkbox]{width:22px;height:22px;accent-color:var(--blue)}
+.setting-control input[type=checkbox]{width:22px;height:22px;accent-color:var(--brand-mid)}
 
 /* Patient Management Form & List */
 .patient-layout{display:grid;grid-template-columns:minmax(300px,420px) minmax(0,1fr);gap:17px;align-items:start}
 .form-grid{display:grid;gap:12px}
 .field{display:flex;flex-direction:column;gap:5px}
-.field label{font-size:11px;font-weight:800;color:var(--text)}
+.field label{font-size:11px;font-weight:800;color:var(--brand-dark)}
 .field-hint{font-size:10px;color:var(--muted)}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .patient-row-list{display:grid;gap:10px}
 .patient-item{display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:13px 15px;border:1px solid var(--border);border-radius:11px;background:#fff}
-.patient-item-title{font-size:13px;font-weight:850}
+  padding:13px 15px;border:1px solid var(--border);border-radius:11px;background:var(--brand-white)}
+.patient-item-title{font-size:13px;font-weight:850;color:var(--brand-dark)}
 .patient-item-sub{font-size:11px;color:var(--muted);margin-top:3px}
 
-.footer{text-align:center;color:#82909d;font-size:10px;padding:25px 0 0}
+.footer{text-align:center;color:var(--muted);font-size:10px;padding:25px 0 0}
 
 /* Floating Real-time Toast Popups */
 .toast-container{position:fixed;right:20px;bottom:20px;z-index:999;display:flex;flex-direction:column;gap:10px;max-width:min(380px,calc(100vw - 40px));pointer-events:none}
-.toast-alert{background:var(--navy);color:#fff;padding:14px 16px;border-radius:11px;
-  box-shadow:0 8px 24px rgba(0,0,0,0.2);display:flex;align-items:flex-start;gap:12px;
-  opacity:0;transform:translateY(16px);transition:all .25s ease;pointer-events:auto;border-left:4px solid var(--red)}
+.toast-alert{background:var(--brand-dark);color:var(--brand-white);padding:14px 16px;border-radius:11px;
+  box-shadow:0 8px 24px rgba(0,49,97,0.22);display:flex;align-items:flex-start;gap:12px;
+  opacity:0;transform:translateY(16px);transition:all .25s ease;pointer-events:auto;border-left:4px solid var(--brand-mid)}
 .toast-alert.show{opacity:1;transform:translateY(0)}
-.toast-icon{font-size:18px;flex-shrink:0}
+.toast-icon{width:28px;height:28px;flex-shrink:0;display:grid;place-items:center}
+.toast-icon img{width:100%;height:100%;object-fit:contain;animation:ivBagFloat 2.8s ease-in-out infinite}
 .toast-body{flex:1;min-width:0}
-.toast-title{font-weight:850;font-size:12px}
-.toast-text{font-size:11px;color:#cbd5e1;margin-top:3px}
+.toast-title{font-weight:850;font-size:12px;color:var(--brand-light)}
+.toast-text{font-size:11px;color:var(--brand-white);margin-top:3px}
 
 .mobile-nav{display:none}
 @keyframes appear{from{opacity:.6;transform:translateY(3px)}to{opacity:1;transform:none}}
@@ -248,8 +282,9 @@ tbody tr:hover{background:#f8faff}
 @media(max-width:900px){
   .app{grid-template-columns:70px minmax(0,1fr)}
   .sidebar{padding:18px 7px}
-  .brand{justify-content:center;padding:0 0 24px}
-  .brand-copy,.nav-label,.nav-text,.nav-count,.sidebar-bottom{display:none}
+  .brand{align-items:center;padding:0 0 18px}
+  .brand-logo-img{display:none}
+  .brand-sub,.nav-label,.nav-text,.nav-count,.sidebar-bottom{display:none}
   .nav-item{justify-content:center;padding:13px 5px}
   .nav-icon{font-size:19px}
   .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -261,7 +296,7 @@ tbody tr:hover{background:#f8faff}
   .sidebar{display:none}
   .topbar{padding:12px 15px}
   .content{padding:19px 12px}
-  .page-heading{flex-direction:column; gap:12px}
+  .page-heading{flex-direction:column; align-items:flex-start; gap:12px}
   h1{font-size:24px}
   .btn{min-height:38px}
   .metrics{gap:8px}
@@ -285,12 +320,12 @@ tbody tr:hover{background:#f8faff}
   .demo-pill{font-size:9px;padding:6px}
   .field-row{grid-template-columns:1fr}
   .mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:99;
-    background:#fff;border-top:1px solid var(--border);justify-content:space-around;
-    padding:8px 4px calc(8px + env(safe-area-inset-bottom)); box-shadow:0 -4px 12px rgba(0,0,0,0.03)}
+    background:var(--brand-white);border-top:1px solid var(--border);justify-content:space-around;
+    padding:8px 4px calc(8px + env(safe-area-inset-bottom)); box-shadow:0 -4px 12px rgba(0,49,97,0.06)}
   .mobile-nav button{border:0;background:none;color:var(--muted);font-size:10px;
     display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px; flex:1}
   .mobile-nav button span{font-size:20px; line-height:1}
-  .mobile-nav button.active{color:var(--blue);font-weight:850}
+  .mobile-nav button.active{color:var(--brand-dark);font-weight:850}
   .setting-row{flex-direction:column; align-items:flex-start; gap:10px}
   .setting-control{width:100%}
   .setting-control input[type=number], .setting-control select{width:100%; max-width:none}
@@ -301,9 +336,14 @@ tbody tr:hover{background:#f8faff}
 <div class="app">
   <aside class="sidebar" aria-label="Main navigation">
     <div class="brand">
-      <div class="brand-icon" aria-hidden="true">IV</div>
-      <div class="brand-copy"><div class="brand-name">IVision</div>
-        <div class="brand-sub">INFUSION MONITORING</div></div>
+      <div class="brand-logo-wrap">
+        <img src="IVision.jpeg" alt="IVision logotype" class="brand-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+        <span style="display:none; font-size:20px; font-weight:900; color:#fefdfd;">IVision</span>
+        <div class="brand-isotype-badge" title="IVision animated IV bag isotype">
+          <img src="IVision_bag.jpeg" alt="IVision animated IV bag" class="brand-isotype-img" onerror="this.style.display='none'; this.parentElement.textContent='IV';">
+        </div>
+      </div>
+      <div class="brand-sub">INFUSION MONITORING</div>
     </div>
     <div class="nav-label">WORKSPACE</div>
     <button class="nav-item active" data-view="overview"><span class="nav-icon">▦</span><span class="nav-text">Overview</span></button>
@@ -325,7 +365,7 @@ tbody tr:hover{background:#f8faff}
       <div class="live-banner-content">
         <span>🚨</span> <strong id="bannerText">CRITICAL EXCEPTION DETECTED:</strong>
       </div>
-      <button class="btn small" style="background:#fff; color:#991b1b; border:none; font-weight:800;" onclick="window.showView('alerts')">View Alert Center</button>
+      <button class="btn small" style="background:#fefdfd; color:#991b1b; border:none; font-weight:800;" onclick="window.showView('alerts')">View Alert Center</button>
     </div>
 
     <header class="topbar">
@@ -338,13 +378,18 @@ tbody tr:hover{background:#f8faff}
 
     <div class="content">
       <div class="page-heading">
-        <div>
-          <h1 id="pageTitle">Infusion overview</h1>
-          <div class="subtitle" id="pageSubtitle">Central station monitoring for the active floor.</div>
+        <div class="page-title-group">
+          <div class="header-bag-anim" aria-hidden="true">
+            <img src="IVision_bag.jpeg" alt="" onerror="this.style.display='none'; this.parentElement.textContent='IV';">
+          </div>
+          <div>
+            <h1 id="pageTitle">Infusion overview</h1>
+            <div class="subtitle" id="pageSubtitle">Central station monitoring for the active floor.</div>
+          </div>
         </div>
         <div class="actions">
           <button class="btn" id="resetBtn">↺ Reset demo</button>
-          <button class="btn primary" id="updateBtn">⟳ Simulate readings</button>
+          <button class="btn accent" id="updateBtn">⟳ Simulate readings</button>
         </div>
       </div>
 
@@ -684,11 +729,11 @@ function showPopupNotification(room, fluid, state) {
   const toast = document.createElement("div");
   toast.className = "toast-alert show";
   
-  let borderColor = state.key === 'critical' || state.key === 'detached' ? 'var(--red)' : state.key === 'erratic' ? 'var(--purple)' : '#d69a25';
+  let borderColor = state.key === 'critical' || state.key === 'detached' ? 'var(--red)' : state.key === 'erratic' ? 'var(--purple)' : 'var(--brand-mid)';
   toast.style.borderLeftColor = borderColor;
 
   toast.innerHTML = `
-    <div class="toast-icon">🚨</div>
+    <div class="toast-icon"><img src="IVision_bag.jpeg" alt="" onerror="this.style.display='none'; this.parentElement.textContent='🚨';"></div>
     <div class="toast-body">
       <div class="toast-title">Room ${room.id} · ${state.label}</div>
       <div class="toast-text">${fluid.name} (${Math.round(fluid.remaining)}mL left) requires nurse attention.</div>
@@ -924,8 +969,8 @@ function showSimpleToast(msg){
   const container = $("toastContainer");
   const toast = document.createElement("div");
   toast.className = "toast-alert show";
-  toast.style.borderLeftColor = "var(--blue)";
-  toast.innerHTML = `<div class="toast-icon">ℹ</div><div class="toast-body"><div class="toast-title">Dashboard Update</div><div class="toast-text">${msg}</div></div>`;
+  toast.style.borderLeftColor = "var(--brand-mid)";
+  toast.innerHTML = `<div class="toast-icon"><img src="IVision_bag.jpeg" alt="" onerror="this.style.display='none'; this.parentElement.textContent='ℹ';"></div><div class="toast-body"><div class="toast-title">Dashboard Update</div><div class="toast-text">${msg}</div></div>`;
   container.appendChild(toast);
   setTimeout(() => {
     toast.classList.remove("show");
@@ -975,10 +1020,10 @@ function renderDetails(){
     const fs = getFluidAlertState(f);
     const pct = f.total > 0 ? Math.max(0, Math.min(100, (f.remaining / f.total) * 100)) : 0;
     
-    let bgStyle = "background:linear-gradient(130deg,#123047,#20566b);";
-    if(fs.key === "critical" || fs.key === "detached") bgStyle = "background:linear-gradient(130deg,#8b1b24,#5c0c14);";
-    else if(fs.key === "attention" || fs.key === "stagnant") bgStyle = "background:linear-gradient(130deg,#8c5700,#5c3800);";
-    else if(fs.key === "erratic") bgStyle = "background:linear-gradient(130deg,#5b21b6,#3b0764);";
+    let bgStyle = "background:linear-gradient(135deg,#003161 0%,#007c96 100%);";
+    if(fs.key === "critical" || fs.key === "detached") bgStyle = "background:linear-gradient(135deg,#8b1b24 0%,#5c0c14 100%);";
+    else if(fs.key === "attention" || fs.key === "stagnant") bgStyle = "background:linear-gradient(135deg,#8c5700 0%,#5c3800 100%);";
+    else if(fs.key === "erratic") bgStyle = "background:linear-gradient(135deg,#5b21b6 0%,#3b0764 100%);";
 
     return `
     <div class="detail-hero" style="${bgStyle}">
@@ -991,7 +1036,7 @@ function renderDetails(){
       </div>
       <div class="detail-value">${Math.round(f.remaining)}<span>mL remaining</span></div>
       <div class="detail-bar" role="progressbar" aria-valuenow="${Math.round(f.remaining)}" aria-valuemin="0" aria-valuemax="${f.total}">
-        <div style="width:${pct}%;background:${fs.key==='normal'?'#61d7ae':'#fff'}"></div>
+        <div style="width:${pct}%;background:${fs.key==='normal'?'var(--brand-light)':'#fefdfd'}"></div>
       </div>
       <div class="detail-remaining">
         <span>Est. Time to Empty*</span>
@@ -999,33 +1044,36 @@ function renderDetails(){
       </div>
       
       <div class="detail-grid" style="margin-top:20px; margin-bottom:15px">
-        <div class="detail-stat" style="background:#ffffff15; border:none; color:#fff;">
-          <div class="detail-stat-label" style="color:#c5d9e4">FLOW RATE</div>
+        <div class="detail-stat" style="background:rgba(254,253,253,0.14); border:none; color:#fefdfd;">
+          <div class="detail-stat-label" style="color:var(--brand-light)">FLOW RATE</div>
           <div class="detail-stat-value">${f.rate} mL/h</div>
         </div>
-        <div class="detail-stat" style="background:#ffffff15; border:none; color:#fff;">
-          <div class="detail-stat-label" style="color:#c5d9e4">SENSOR / TELEMETRY</div>
-          <div class="detail-stat-value" style="color:${f.device==='Connected'&&f.state!=='detached'?'#61d7ae':'#ffa7b0'}">${f.state==='detached'||f.device==='Offline'?'Detached / Offline':f.device}</div>
+        <div class="detail-stat" style="background:rgba(254,253,253,0.14); border:none; color:#fefdfd;">
+          <div class="detail-stat-label" style="color:var(--brand-light)">SENSOR / TELEMETRY</div>
+          <div class="detail-stat-value" style="color:${f.device==='Connected'&&f.state!=='detached'?'var(--brand-light)':'#ffa7b0'}">${f.state==='detached'||f.device==='Offline'?'Detached / Offline':f.device}</div>
         </div>
       </div>
       
       <div class="detail-actions">
-        <button class="btn small" style="color:var(--navy); background:#fff; border:none" onclick="window.handleAdjust('${r.id}','${f.fId}')">Edit volume</button>
-        <button class="btn small" style="color:#fff; background:rgba(255,255,255,0.2); border:none" onclick="window.handleToggleDevice('${r.id}','${f.fId}')">${f.device==="Connected"&&f.state!=="detached"?"Simulate sensor detach":"Simulate reconnect"}</button>
-        ${fs.key !== 'normal' ? `<button class="btn small" style="color:#fff; background:rgba(255,255,255,0.2); border:none" onclick="window.handleAck('${f.fId}')">${acknowledged.has(f.fId)?"Unacknowledge":"Acknowledge"}</button>` : ''}
+        <button class="btn small" style="color:var(--brand-dark); background:#fefdfd; border:none" onclick="window.handleAdjust('${r.id}','${f.fId}')">Edit volume</button>
+        <button class="btn small" style="color:#fefdfd; background:rgba(254,253,253,0.2); border:none" onclick="window.handleToggleDevice('${r.id}','${f.fId}')">${f.device==="Connected"&&f.state!=="detached"?"Simulate sensor detach":"Simulate reconnect"}</button>
+        ${fs.key !== 'normal' ? `<button class="btn small" style="color:#fefdfd; background:rgba(254,253,253,0.2); border:none" onclick="window.handleAck('${f.fId}')">${acknowledged.has(f.fId)?"Unacknowledge":"Acknowledge"}</button>` : ''}
       </div>
     </div>`;
   }).join("");
 
   $("roomDetails").innerHTML = `
-    <div style="margin-bottom:15px; font-size:13px; font-weight:800; color:var(--text)">
+    <div style="margin-bottom:15px; font-size:13px; font-weight:800; color:var(--brand-dark)">
       Room ${r.id} · ${r.ward} Ward · ${r.fluids.length} active infusion line${r.fluids.length!==1?'s':''}
     </div>
     ${cardsHtml}
-    <div class="event" style="margin-top:10px"><div class="event-icon">◷</div><div>
-      <div class="event-title">Last telemetry pulse</div>
-      <div class="event-sub">${lastUpdated.toLocaleTimeString()} · Continuous monitoring active</div>
-    </div></div>
+    <div class="event" style="margin-top:10px">
+      <div class="event-icon"><img src="IVision_bag.jpeg" alt="" onerror="this.style.display='none'; this.parentElement.textContent='◷';"></div>
+      <div>
+        <div class="event-title">Last telemetry pulse</div>
+        <div class="event-sub">${lastUpdated.toLocaleTimeString()} · Continuous monitoring active</div>
+      </div>
+    </div>
     <div class="notice"><strong>Clinical protocol:</strong> Check line for kinking or patient tampering if Occlusion or Erratic alerts activate.</div>
   `;
 }
@@ -1117,7 +1165,7 @@ function renderDevices(){
     const isDetached = d.fluid.device === "Offline" || d.fluid.state === "detached";
     return `<article class="device-card"><div class="device-top"><div>
       <div class="device-name">${d.fluid.name}</div><div class="device-id">RM${d.room.id} - Line ${d.fluid.fId}</div></div>
-      <span aria-hidden="true" style="font-size:23px; color:var(--muted)">⌁</span></div>
+      <div class="event-icon"><img src="IVision_bag.jpeg" alt="" onerror="this.style.display='none'; this.parentElement.textContent='⌁';"></div></div>
       <div class="device-state" style="color:${isDetached?"var(--red)":"var(--green)"}">● ${isDetached ? "Detached / Offline" : "Securely Attached"}</div>
       <div class="event-sub">Room ${d.room.id} (${d.room.ward}) · Vol: ${Math.round(d.fluid.remaining)} mL</div>
       <button class="btn small" style="margin-top:13px" onclick="window.handleToggleDevice('${d.room.id}','${d.fluid.fId}')">${isDetached?"Simulate reattach":"Simulate detach"}</button></article>`;
